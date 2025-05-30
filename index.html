@@ -1,0 +1,2815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspocket</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+        href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/esc-pos-encoder@1.3.1/dist/esc-pos-encoder.min.js"></script>
+    <style>
+        body {
+            font-family: 'Manrope', 'Noto Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom scrollbar for product list and cart */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Hide number input arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div id="app" class="relative flex size-full min-h-screen flex-col bg-white justify-between group/design-root overflow-x-hidden max-w-md w-full shadow-lg rounded-lg md:min-h-[80vh]">
+
+        <div id="loadingOverlay" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="flex items-center justify-center space-x-2">
+                <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+                <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+                <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+            </div>
+            <p class="ml-4 text-gray-700">Loading...</p>
+        </div>
+
+        <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h3 id="modalTitle" class="text-xl font-bold mb-4 text-gray-800"></h3>
+                <p id="modalMessage" class="text-gray-600 mb-6"></p>
+                <button id="modalCloseButton" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">OK</button>
+            </div>
+        </div>
+
+        <div id="loginPage" class="flex flex-col h-full w-full justify-between">
+            <div>
+                <h1 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-center pb-3 pt-5" data-translate="appTitle">Kaspocket</h1>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="loginEmail" type="email" placeholder="Email"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="">
+                    </label>
+                </div>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="loginPassword" type="password" placeholder="Password"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="">
+                    </label>
+                </div>
+                <p id="forgotPasswordLink" class="text-[#60758a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline cursor-pointer hover:text-blue-600 transition-colors" data-translate="forgotPassword">Forgot Password?</p>
+                <div class="flex px-4 py-3">
+                    <button id="signInButton"
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                        <span class="truncate" data-translate="signIn">Sign In</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <p id="signUpLink" class="text-[#60758a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline cursor-pointer hover:text-blue-600 transition-colors" data-translate="noAccountSignUp">Don't have an account? Sign Up</p>
+                <div class="h-5 bg-white"></div>
+            </div>
+        </div>
+
+        <div id="registerPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div>
+                <div class="flex items-center bg-white p-4 pb-2 justify-between">
+                    <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12 pr-12" data-translate="appTitle">Kaspocket</h2>
+                </div>
+                <h1 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-center pb-3 pt-5" data-translate="createAccount">Create your account</h1>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="registerFullName" type="text" placeholder="Full Name"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="" data-translate-placeholder="fullNamePlaceholder">
+                    </label>
+                </div>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="registerEmail" type="email" placeholder="Email"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="">
+                    </label>
+                </div>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="registerPassword" type="password" placeholder="Password"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="" data-translate-placeholder="passwordPlaceholder">
+                    </label>
+                </div>
+                <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+                    <label class="flex flex-col min-w-40 flex-1">
+                        <input id="registerConfirmPassword" type="password" placeholder="Confirm Password"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-14 placeholder:text-[#60758a] p-4 text-base font-normal leading-normal"
+                            value="" data-translate-placeholder="confirmPasswordPlaceholder">
+                    </label>
+                </div>
+                <div class="flex px-4 py-3">
+                    <button id="signUpButton"
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#0c7ff2] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                        <span class="truncate" data-translate="signUp">Sign Up</span>
+                    </button>
+                </div>
+                <p id="signInLink" class="text-[#60758a] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline cursor-pointer hover:text-blue-600 transition-colors" data-translate="alreadyAccountSignIn">Already have an account? Sign In</p>
+            </div>
+            <div>
+                <div class="h-5 bg-white"></div>
+            </div>
+        </div>
+
+        <div id="dashboardPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex-1 overflow-y-auto">
+                <div class="flex items-center bg-blue-600 text-white p-4 justify-between rounded-t-lg">
+                    <h2 class="text-lg font-bold" data-translate="dashboardTitle">Kaspocket Dashboard</h2>
+                    <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm" data-translate="logoutButton">Logout</button>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-700 mb-4" data-translate="welcomeMessage">Welcome, <span id="currentUserId" class="font-semibold"></span>!</p>
+                    <div class="grid grid-cols-1 gap-4">
+                        <button id="goToCashierButton" class="bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fas fa-cash-register mr-2"></i> <span data-translate="openCashier">Open Cashier</span>
+                        </button>
+                        <button id="goToProductManagementButton" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fas fa-boxes mr-2"></i> <span data-translate="manageProducts">Manage Products</span>
+                        </button>
+                        <button id="goToTransactionHistoryButton" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fas fa-history mr-2"></i> <span data-translate="transactionHistory">Transaction History</span>
+                        </button>
+                        <button id="goToReportsButton" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fas fa-chart-line mr-2"></i> <span data-translate="viewReports">View Reports</span>
+                        </button>
+                        <button id="goToSettingsButton" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
+                            <i class="fas fa-cog mr-2"></i> <span data-translate="settings">Settings</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="productManagementPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex items-center bg-purple-600 text-white p-4 justify-between rounded-t-lg">
+                <button id="backToDashboardFromProducts" class="text-white hover:text-gray-200 transition-colors text-lg"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold flex-1 text-center" data-translate="manageProducts">Manage Products</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <form id="productForm" class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <input type="hidden" id="productId">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800" id="productFormTitle" data-translate="addNewProduct">Add New Product</h3>
+                    <div class="mb-3">
+                        <label for="productName" class="block text-sm font-medium text-gray-700 mb-1" data-translate="productNameLabel">Product Name</label>
+                        <input type="text" id="productName" placeholder="Product Name" required
+                            class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2" data-translate-placeholder="productNamePlaceholder">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="block text-sm font-medium text-gray-700 mb-1" data-translate="priceLabel">Price</label>
+                        <input type="number" id="productPrice" placeholder="Price" step="0.01" required
+                            class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2" data-translate-placeholder="pricePlaceholder">
+                    </div>
+                    <div class="mb-4">
+                        <label for="productStock" class="block text-sm font-medium text-gray-700 mb-1" data-translate="stockLabel">Stock</label>
+                        <input type="number" id="productStock" placeholder="Stock" required
+                            class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2" data-translate-placeholder="stockPlaceholder">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="block text-sm font-medium text-gray-700 mb-1" data-translate="productImageLabel">Gambar Produk</label>
+                        <input type="file" id="productImage" accept="image/*"
+                            class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2">
+                        <img id="productImagePreview" src="" alt="Image Preview" class="mt-2 hidden w-24 h-24 object-cover rounded-lg border border-gray-200">
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full" id="saveProductButton" data-translate="addProductButton">Add Product</button>
+                    <button type="button" id="cancelEditButton" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition-colors w-full mt-2 hidden" data-translate="cancelEditButton">Batal Edit</button>
+                </form>
+
+                <h3 class="text-lg font-semibold mb-3 text-gray-800" data-translate="productListTitle">Product List</h3>
+                <div id="productList" class="space-y-3">
+                    <p class="text-center text-gray-500" id="noProductsMessage" data-translate="noProductsMessage">No products added yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="cashierPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex items-center bg-green-600 text-white p-4 justify-between rounded-t-lg">
+                <button id="backToDashboardFromCashier" class="text-white hover:text-gray-200 transition-colors text-lg"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold flex-1 text-center" data-translate="posTitle">Kaspocket POS</h2>
+                <button id="goToSettingsFromCashier" class="flex w-12 items-center justify-end text-white hover:text-gray-200 transition-colors">
+                    <i class="fas fa-cog text-lg"></i>
+                </button>
+            </div>
+
+            <div class="flex-1 flex flex-col">
+                <div class="px-4 py-3">
+                    <label class="flex flex-col min-w-40 h-12 w-full">
+                        <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                            <div class="text-[#60758a] flex border-none bg-[#f0f2f5] items-center justify-center pl-4 rounded-l-lg border-r-0">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <input id="productSearch" type="text" placeholder="Cari produk"
+                                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-full placeholder:text-[#60758a] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                                value="" data-translate-placeholder="searchProductPlaceholder">
+                        </div>
+                    </label>
+                </div>
+
+                <div id="availableProducts" class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4 overflow-y-auto custom-scrollbar flex-1">
+                    <p class="text-center text-gray-500 col-span-full" id="noAvailableProductsMessage" data-translate="noProductsFound">No products found.</p>
+                </div>
+            </div>
+
+            <div class="bg-white border-t border-[#f0f2f5] pt-4">
+                <div id="cartItems" class="px-4 max-h-48 overflow-y-auto custom-scrollbar">
+                    <p class="text-center text-gray-500" id="emptyCartMessage" data-translate="emptyCartMessage">Cart is empty.</p>
+                </div>
+
+                <!-- <div class="flex items-center gap-2 px-4 pb-2 pt-4">
+                    <label for="taxInput" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="taxLabel">Tax (%)</label>
+                    <input type="number" id="taxInput" value="0" min="0" max="100" step="1"
+                        class="form-input w-20 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-right text-base font-medium">
+                </div> -->
+
+                <div class="flex items-center gap-2 px-4 pb-2 pt-4">
+                    <label for="discountInput" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="discountLabel">Discount (%)</label>
+                    <input type="number" id="discountInput" value="0" min="0" max="100" step="1"
+                        class="form-input w-20 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-right text-base font-medium">
+                </div>
+
+                <div class="flex items-center gap-2 px-4 pb-2 pt-4">
+                    <label for="paymentMethodSelect" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="paymentMethodLabel">Metode Pembayaran</label>
+                    <select id="paymentMethodSelect" class="form-select flex-1 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2">
+                        <option value="Tunai" data-translate="cashOption">Tunai</option>
+                        <option value="Kredit" data-translate="creditOption">Kredit</option>
+                        <option value="Debit" data-translate="debitOption">Debit</option>
+                        <option value="Transfer Bank" data-translate="bankTransferOption">Transfer Bank</option>
+                        <option value="E-wallet" data-translate="eWalletOption">E-wallet</option>
+                        <option value="QRIS" data-translate="qrisOption">QRIS</option>
+                    </select>
+                </div>
+
+                <h3 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4" data-translate="totalLabel">Total: <span id="cartTotal">Rp 0</span></h3>
+                <div class="flex justify-stretch">
+                    <div class="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-between">
+                        <button id="processTransactionButton"
+                            class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#0c7ff2] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors flex-1">
+                            <span class="truncate" data-translate="payButton">Bayar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="transactionHistoryPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex items-center bg-yellow-600 text-white p-4 justify-between rounded-t-lg">
+                <button id="backToDashboardFromTransactions" class="text-white hover:text-gray-200 transition-colors text-lg"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold flex-1 text-center" data-translate="transactionHistoryTitle">Riwayat Transaksi</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <div id="transactionList" class="space-y-4">
+                    <p class="text-center text-gray-500" id="noTransactionsMessage" data-translate="noTransactionsMessage">Belum ada transaksi.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="reportPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex items-center bg-indigo-600 text-white p-4 justify-between rounded-t-lg">
+                <button id="backToDashboardFromReports" class="text-white hover:text-gray-200 transition-colors text-lg"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold flex-1 text-center" data-translate="reportsTitle">Laporan</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <div class="flex px-4 py-3">
+                    <div class="flex h-10 flex-1 items-center justify-center rounded-xl bg-[#f1f2f4] p-1">
+                        <label
+                            class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-xl px-2 has-[:checked]:bg-white has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-[#121416] text-[#6a7681] text-sm font-medium leading-normal">
+                            <span class="truncate" data-translate="dailyReport">Harian</span>
+                            <input type="radio" name="reportPeriod" id="reportPeriodDaily" class="invisible w-0" value="daily" />
+                        </label>
+                        <label
+                            class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-xl px-2 has-[:checked]:bg-white has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-[#121416] text-[#6a7681] text-sm font-medium leading-normal">
+                            <span class="truncate" data-translate="weeklyReport">Mingguan</span>
+                            <input type="radio" name="reportPeriod" id="reportPeriodWeekly" class="invisible w-0" value="weekly" />
+                        </label>
+                        <label
+                            class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-xl px-2 has-[:checked]:bg-white has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-[#121416] text-[#6a7681] text-sm font-medium leading-normal">
+                            <span class="truncate" data-translate="monthlyReport">Bulanan</span>
+                            <input type="radio" name="reportPeriod" id="reportPeriodMonthly" class="invisible w-0" value="monthly" checked />
+                        </label>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-4 px-4 py-6">
+                    <div class="flex min-w-72 flex-1 flex-col gap-2">
+                        <p class="text-[#121416] text-base font-medium leading-normal" data-translate="salesTrend">Tren Penjualan</p>
+                        <p id="salesTrendAmount" class="text-[#121416] tracking-light text-[32px] font-bold leading-tight truncate">Rp 0</p>
+                        <div class="flex gap-1">
+                            <p id="salesTrendPeriod" class="text-[#6a7681] text-base font-normal leading-normal" data-translate="last30Days">30 Hari Terakhir</p>
+                            <p id="salesTrendChange" class="text-[#078838] text-base font-medium leading-normal"></p>
+                        </div>
+                    </div>
+                </div>
+                <h2 class="text-[#121416] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5" data-translate="keyMetrics">Metrik Utama</h2>
+                <div class="flex flex-wrap gap-4 p-4">
+                    <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dde1e3]">
+                        <p class="text-[#121416] text-base font-medium leading-normal" data-translate="totalSales">Total Penjualan</p>
+                        <p id="totalSalesAmount" class="text-[#121416] tracking-light text-2xl font-bold leading-tight">Rp 0</p>
+                        <p id="totalSalesChange" class="text-[#078838] text-base font-medium leading-normal"></p>
+                    </div>
+                    <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dde1e3]">
+                        <p class="text-[#121416] text-base font-medium leading-normal" data-translate="averageTransaction">Rata-rata Transaksi</p>
+                        <p id="avgTransactionAmount" class="text-[#121416] tracking-light text-2xl font-bold leading-tight">Rp 0</p>
+                        <p id="avgTransactionChange" class="text-[#e73908] text-base font-medium leading-normal"></p>
+                    </div>
+                    <div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-xl p-6 border border-[#dde1e3]">
+                        <p class="text-[#121416] text-base font-medium leading-normal" data-translate="bestSellingProduct">Produk Terlaris</p>
+                        <p id="bestSellingProduct" class="text-[#121416] tracking-light text-2xl font-bold leading-tight">N/A</p>
+                        <p id="bestSellingProductChange" class="text-[#078838] text-base font-medium leading-normal"></p>
+                    </div>
+                </div>
+                <div class="px-4 py-3">
+                    <button id="analyzeReportButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full flex items-center justify-center">
+                        <i class="fas fa-brain mr-2"></i> <span data-translate="analyzeReportButton">Analisis Laporan dengan AI</span>
+                    </button>
+                </div>
+                <div id="aiAnalysisOutput" class="p-4 bg-gray-50 rounded-lg shadow-sm mt-4 hidden">
+                    <h3 class="text-lg font-semibold mb-2 text-gray-800" data-translate="aiReportAnalysisTitle">Analisis Laporan AI</h3>
+                    <div id="aiAnalysisLoading" class="flex items-center justify-center space-x-2 hidden">
+                        <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+                        <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+                        <div class="w-4 h-4 rounded-full animate-pulse bg-blue-500"></div>
+                        <p class="ml-2 text-gray-700" data-translate="analyzingReport">Menganalisis laporan...</p>
+                    </div>
+                    <p id="aiAnalysisResult" class="text-gray-700 whitespace-pre-wrap"></p>
+                </div>
+            </div>
+            <div><div class="h-5 bg-white"></div></div>
+        </div>
+
+        <div id="settingsPage" class="flex flex-col h-full w-full justify-between hidden">
+            <div class="flex items-center bg-gray-700 text-white p-4 justify-between rounded-t-lg">
+                <button id="backToDashboardFromSettings" class="text-white hover:text-gray-200 transition-colors text-lg"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="text-lg font-bold flex-1 text-center" data-translate="settings">Pengaturan</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <h3 class="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4" data-translate="businessProfileTitle">Profil Bisnis</h3>
+                <form id="businessProfileForm" class="p-4 space-y-4">
+                    <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 border-b border-gray-100 rounded-lg shadow-sm">
+                        <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-12">
+                            <i class="fas fa-store text-xl"></i>
+                        </div>
+                        <div class="flex flex-col justify-center flex-1">
+                            <label for="businessName" class="text-[#121416] text-base font-medium leading-normal line-clamp-1" data-translate="businessNameLabel">Nama Bisnis</label>
+                            <input type="text" id="businessName" placeholder="Nama Bisnis"
+                                class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 mt-1 text-sm text-[#6a7681]" data-translate-placeholder="businessNamePlaceholder">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 border-b border-gray-100 rounded-lg shadow-sm">
+                        <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-12">
+                            <i class="fas fa-map-marker-alt text-xl"></i>
+                        </div>
+                        <div class="flex flex-col justify-center flex-1">
+                            <label for="businessAddress" class="text-[#121416] text-base font-medium leading-normal line-clamp-1" data-translate="addressLabel">Alamat</label>
+                            <input type="text" id="businessAddress" placeholder="Alamat"
+                                class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 mt-1 text-sm text-[#6a7681]" data-translate-placeholder="addressPlaceholder">
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 rounded-lg shadow-sm">
+                        <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-12">
+                            <i class="fas fa-phone-alt text-xl"></i>
+                        </div>
+                        <div class="flex flex-col justify-center flex-1">
+                            <label for="phoneNumber" class="text-[#121416] text-base font-medium leading-normal line-clamp-1" data-translate="phoneNumberLabel">Nomor Telepon</label>
+                            <input type="text" id="phoneNumber" placeholder="Nomor Telepon"
+                                class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 mt-1 text-sm text-[#6a7681]" data-translate-placeholder="phoneNumberPlaceholder">
+                        </div>
+                    </div>
+                    <button type="submit" id="saveBusinessProfileButton"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full text-lg font-semibold shadow-md">
+                        <span data-translate="saveProfileButton">Simpan Profil</span>
+                    </button>
+                </form>
+
+                <h3 class="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4" data-translate="transactionSettingsTitle">Pengaturan Transaksi</h3>
+                <div id="taxSetting" class="flex items-center gap-4 bg-white px-4 min-h-14 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-10">
+                        <i class="fas fa-percent"></i>
+                    </div>
+                    <p class="text-[#121416] text-base font-normal leading-normal flex-1 truncate" data-translate="taxLabel">Pajak</p>
+                    <p id="currentTaxRate" class="text-[#6a7681] text-sm font-normal leading-normal">0%</p>
+                </div>
+                <h3 class="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4" data-translate="integrationsTitle">Integrasi</h3>
+                <div id="receiptPrinterSetting" class="flex items-center gap-4 bg-white px-4 min-h-14 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-10">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <p class="text-[#121416] text-base font-normal leading-normal flex-1 truncate" data-translate="receiptPrinterLabel">Printer Struk</p>
+                </div>
+                <h3 class="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4" data-translate="languageSettingsTitle">Pengaturan Bahasa</h3>
+                <div id="languageSetting" class="flex items-center gap-4 bg-white px-4 min-h-14 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div class="text-[#121416] flex items-center justify-center rounded-lg bg-[#f1f2f4] shrink-0 size-10">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <p class="text-[#121416] text-base font-normal leading-normal flex-1 truncate" data-translate="languageLabel">Bahasa</p>
+                    <p id="currentLanguage" class="text-[#6a7681] text-sm font-normal leading-normal">Indonesia</p>
+                </div>
+            </div>
+            <div><div class="h-5 bg-white"></div></div>
+        </div>
+
+        <div id="taxModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+                <button id="closeTaxModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="setTaxRateTitle">Atur Tarif Pajak</h3>
+                <form id="taxForm" class="space-y-4">
+                    <div>
+                        <label for="taxRateInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="taxRateLabel">Tarif Pajak (%)</label>
+                        <input type="number" id="taxRateInput" placeholder="e.g., 10" step="0.01" min="0" max="100" required
+                            class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2">
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full" data-translate="saveTaxRateButton">Simpan Tarif Pajak</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="printerSettingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+                <button id="closePrinterSettingsModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="designReceiptTitle">Desain Struk (Simulasi)</h3>
+
+                <div class="mb-4">
+                    <label for="receiptHeaderInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="receiptHeaderLabel">Teks Header Struk</label>
+                    <textarea id="receiptHeaderInput" rows="3" placeholder="Terima kasih atas pembelian Anda!"
+                        class="form-textarea w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm" data-translate-placeholder="receiptHeaderPlaceholder"></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label for="receiptFooterInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="receiptFooterLabel">Teks Footer Struk</label>
+                    <textarea id="receiptFooterInput" rows="3" placeholder="Kunjungi kami lagi segera!"
+                        class="form-textarea w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm" data-translate-placeholder="receiptFooterPlaceholder"></textarea>
+                </div>
+
+                <button id="saveReceiptDesignButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full" data-translate="saveReceiptDesignButton">Simpan Desain Struk</button>
+
+                <p class="text-xs text-gray-500 mt-4" data-translate="receiptDesignDisclaimer">
+                    Disclaimer: Desain struk WYSIWYG penuh tidak didukung di lingkungan browser ini. Fitur ini menyediakan kustomisasi header/footer dasar.
+                </p>
+            </div>
+        </div>
+
+        <div id="languageSettingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+                <button id="closeLanguageSettingsModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="languageSettingsTitle">Pengaturan Bahasa</h3>
+                <div class="space-y-4">
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="language" value="id" class="form-radio text-blue-600" checked>
+                        <span class="text-gray-700" data-translate="indonesianLanguage">Bahasa Indonesia</span>
+                    </label>
+                    <label class="flex items-center space-x-3">
+                        <input type="radio" name="language" value="en" class="form-radio text-blue-600">
+                        <span class="text-gray-700" data-translate="englishLanguage">English</span>
+                    </label>
+                </div>
+                <button id="saveLanguageButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full mt-6" data-translate="saveLanguageButton">Simpan Bahasa</button>
+            </div>
+        </div>
+
+
+        <div id="receiptModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
+                <button id="closeReceiptModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                <h3 class="text-2xl font-bold mb-4 text-center text-gray-800" data-translate="receiptTitle">Struk</h3>
+                <div class="text-center mb-4">
+                    <p class="text-lg font-semibold text-gray-800" id="receiptBusinessName"></p>
+                    <p class="text-sm text-gray-600" id="receiptBusinessAddress"></p>
+                    <p class="text-sm text-gray-600" id="receiptPhoneNumber"></p>
+                    <p class="text-sm text-gray-700 mt-2 whitespace-pre-wrap" id="receiptCustomHeader"></p> </div>
+                <div class="border-b pb-4 mb-4">
+                    <p class="text-sm text-gray-600" data-translate="dateLabel">Tanggal: <span id="receiptDate"></span></p>
+                    <p class="text-sm text-gray-600" data-translate="transactionIdLabel">ID Transaksi: <span id="receiptTransactionId"></span></p>
+                    <p class="text-sm text-gray-600" data-translate="paymentMethodLabel">Metode Pembayaran: <span id="receiptPaymentMethod"></span></p>
+                </div>
+                <div id="receiptItems" class="mb-4 max-h-40 overflow-y-auto custom-scrollbar">
+                    </div>
+                <div class="border-t pt-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xl font-bold text-gray-800" data-translate="totalLabel">Total:</span>
+                        <span id="receiptTotal" class="text-2xl font-extrabold text-blue-600"></span>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <p class="text-sm text-gray-700 whitespace-pre-wrap" id="receiptCustomFooter"></p> </div>
+                <div class="flex justify-between gap-2 mt-4">
+                    <button id="generatePdfButton" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors flex-1">
+                        <i class="fas fa-file-pdf mr-2"></i> <span data-translate="generatePdfButton">Jadi PDF</span>
+                    </button>
+                    <button id="shareReceiptButton" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex-1">
+                        <i class="fas fa-share-alt mr-2"></i> <span data-translate="sharePdfButton">Bagikan</span>
+                    </button>
+                    <button id="printReceiptButton" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors flex-1">
+                        <i class="fas fa-print mr-2"></i> <span data-translate="printReceiptButton">Cetak Struk</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            addDoc,
+            setDoc,
+            updateDoc,
+            deleteDoc,
+            onSnapshot,
+            collection,
+            query,
+            where,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import {
+            getStorage,
+            ref,
+            uploadBytes,
+            getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // Import jspdf for PDF generation
+        import { jsPDF } from "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+
+        // Firebase Configuration (from user's input)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCE4noevPhUpXVLVfAsyHyJ1e1dTXBtvWk",
+            authDomain: "kasir-mobile-318e1.firebaseapp.com",
+            projectId: "kasir-mobile-318e1",
+            storageBucket: "kasir-mobile-318e1.firebasestorage.app",
+            messagingSenderId: "333243172032",
+            appId: "1:333243172032:web:22d69d0ca742ae30b0d925",
+            measurementId: "G-KCY66F014X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app); // Initialize Firebase Storage
+
+        // Global variables for app state
+        let currentUserId = null;
+        let products = []; // Array to store products fetched from Firestore
+        let cart = [];     // Array to store items in the current transaction cart
+        let transactions = []; // Array to store transactions fetched from Firestore
+        let businessProfile = {}; // Object to store business profile settings
+        let currentLanguage = 'id'; // Default language
+
+        // --- Translation Data ---
+        const translations = {
+            id: {
+                appTitle: "Kaspocket",
+                forgotPassword: "Lupa Kata Sandi?",
+                signIn: "Masuk",
+                noAccountSignUp: "Belum punya akun? Daftar",
+                createAccount: "Buat akun Anda",
+                fullNamePlaceholder: "Nama Lengkap",
+                passwordPlaceholder: "Kata Sandi",
+                confirmPasswordPlaceholder: "Konfirmasi Kata Sandi",
+                signUp: "Daftar",
+                alreadyAccountSignIn: "Sudah punya akun? Masuk",
+                dashboardTitle: "Dasbor Kaspocket",
+                logoutButton: "Keluar",
+                welcomeMessage: "Selamat datang,",
+                openCashier: "Buka Kasir",
+                manageProducts: "Kelola Produk",
+                transactionHistory: "Riwayat Transaksi",
+                viewReports: "Lihat Laporan",
+                settings: "Pengaturan",
+                addNewProduct: "Tambah Produk Baru",
+                productNameLabel: "Nama Produk",
+                productNamePlaceholder: "Nama Produk",
+                priceLabel: "Harga",
+                pricePlaceholder: "Harga",
+                stockLabel: "Stok",
+                stockPlaceholder: "Stok",
+                productImageLabel: "Gambar Produk",
+                addProductButton: "Tambah Produk",
+                updateProductButton: "Perbarui Produk",
+                cancelEditButton: "Batal Edit",
+                productListTitle: "Daftar Produk",
+                noProductsMessage: "Belum ada produk ditambahkan.",
+                posTitle: "Kaspocket POS",
+                searchProductPlaceholder: "Cari produk",
+                noProductsFound: "Tidak ada produk ditemukan.",
+                emptyCartMessage: "Keranjang kosong.",
+                taxLabel: "Pajak (%)",
+                discountLabel: "Diskon (%)",
+                paymentMethodLabel: "Metode Pembayaran",
+                cashOption: "Tunai",
+                creditOption: "Kredit",
+                debitOption: "Debit",
+                bankTransferOption: "Transfer Bank",
+                eWalletOption: "E-wallet",
+                qrisOption: "QRIS",
+                totalLabel: "Total:",
+                payButton: "Bayar",
+                transactionHistoryTitle: "Riwayat Transaksi",
+                noTransactionsMessage: "Belum ada transaksi.",
+                reportsTitle: "Laporan",
+                dailyReport: "Harian",
+                weeklyReport: "Mingguan",
+                monthlyReport: "Bulanan",
+                salesTrend: "Tren Penjualan",
+                last30Days: "30 Hari Terakhir",
+                keyMetrics: "Metrik Utama",
+                totalSales: "Total Penjualan",
+                averageTransaction: "Rata-rata Transaksi",
+                bestSellingProduct: "Produk Terlaris",
+                analyzeReportButton: "Analisis Laporan dengan AI",
+                aiReportAnalysisTitle: "Analisis Laporan AI",
+                analyzingReport: "Menganalisis laporan...",
+                reportAnalysisSuccess: "Analisis laporan berhasil!",
+                reportAnalysisFailed: "Gagal menganalisis laporan. Silakan coba lagi.",
+                businessProfileTitle: "Profil Bisnis",
+                businessNameLabel: "Nama Bisnis",
+                businessNamePlaceholder: "Nama Bisnis",
+                addressLabel: "Alamat",
+                addressPlaceholder: "Alamat",
+                phoneNumberLabel: "Nomor Telepon",
+                phoneNumberPlaceholder: "Nomor Telepon",
+                saveProfileButton: "Simpan Profil",
+                transactionSettingsTitle: "Pengaturan Transaksi",
+                paymentMethodsLabel: "Metode Pembayaran",
+                taxLabel: "Pajak",
+                integrationsTitle: "Integrasi",
+                receiptPrinterLabel: "Printer Struk",
+                languageSettingsTitle: "Pengaturan Bahasa",
+                languageLabel: "Bahasa",
+                setTaxRateTitle: "Atur Tarif Pajak",
+                taxRateLabel: "Tarif Pajak (%)",
+                saveTaxRateButton: "Simpan Tarif Pajak",
+                designReceiptTitle: "Desain Struk",
+                receiptHeaderLabel: "Teks Header Struk",
+                receiptHeaderPlaceholder: "Terima kasih atas pembelian Anda!",
+                receiptFooterLabel: "Teks Footer Struk",
+                receiptFooterPlaceholder: "Kunjungi kami lagi segera!",
+                saveReceiptDesignButton: "Simpan Desain Struk",
+                receiptDesignDisclaimer: "Disclaimer: Desain struk WYSIWYG penuh tidak didukung di lingkungan browser ini. Fitur ini menyediakan kustomisasi header/footer dasar.",
+                indonesianLanguage: "Bahasa Indonesia",
+                englishLanguage: "English",
+                saveLanguageButton: "Simpan Bahasa",
+                receiptTitle: "Struk",
+                dateLabel: "Tanggal:",
+                transactionIdLabel: "ID Transaksi:",
+                generatePdfButton: "Jadi PDF",
+                sharePdfButton: "Bagikan",
+                printReceiptButton: "Cetak Struk", // New translation key
+                outOfStock: "Stok Habis",
+                cannotAddMore: "Tidak bisa menambahkan lebih banyak",
+                maximumStockReached: "Stok maksimal tercapai.",
+                isOutOfStock: "habis.",
+                cartEmpty: "Keranjang Kosong",
+                addToCartBeforeProcessing: "Silakan tambahkan item ke keranjang sebelum memproses transaksi.",
+                transactionSuccess: "Sukses",
+                transactionProcessedSuccessfully: "Transaksi berhasil diproses!",
+                transactionError: "Error",
+                failedToProcessTransaction: "Gagal memproses transaksi. Silakan coba lagi.",
+                confirmDelete: "Konfirmasi Hapus",
+                areYouYousureDeleteProduct: "Apakah Anda yakin ingin menghapus produk ini?",
+                deleteButton: "Hapus",
+                productDeletedSuccessfully: "Produk berhasil dihapus!",
+                failedToDeleteProduct: "Gagal menghapus produk.",
+                productUpdatedSuccessfully: "Produk berhasil diperbarui!",
+                productAddedSuccessfully: "Produk berhasil ditambahkan!",
+                failedToSaveProduct: "Gagal menyimpan produk.",
+                enterValidProductDetails: "Silakan masukkan nama produk yang valid, harga positif, dan stok non-negatif.",
+                failedToUploadImage: "Gagal mengunggah gambar.",
+                printingReceipt: "Struk sedang dibuat PDF...",
+                pdfGeneratedSuccessfully: "PDF berhasil dibuat!",
+                failedToGeneratePdf: "Gagal membuat PDF.",
+                webShareApiNotSupported: "Web Share API tidak didukung di browser ini.",
+                receiptDesignSavedSuccessfully: "Desain struk berhasil disimpan!",
+                failedToSaveReceiptDesign: "Gagal menyimpan desain struk.",
+                failedToSignIn: "Gagal masuk. Silakan periksa kredensial Anda.",
+                userNotFound: "Tidak ada pengguna yang ditemukan dengan email ini.",
+                incorrectPassword: "Kata sandi salah.",
+                invalidEmailFormat: "Format email tidak valid.",
+                enterEmailAndPassword: "Silakan masukkan email dan kata sandi.",
+                accountCreatedSuccessfully: "Akun berhasil dibuat! Anda sekarang masuk.",
+                failedToCreateAccount: "Gagal membuat akun.",
+                emailAlreadyInUse: "Email ini sudah digunakan.",
+                passwordTooWeak: "Kata sandi terlalu lemah.",
+                failedToLogout: "Gagal keluar.",
+                enterEmailForReset: "Silakan masukkan email Anda di kolom login untuk mengatur ulang kata sandi Anda.",
+                passwordResetLinkSent: "Tautan pengaturan ulang kata sandi telah dikirim ke alamat email Anda.",
+                passwordResetFailed: "Pengaturan Ulang Kata Sandi Gagal",
+                failedToSendResetEmail: "Gagal mengirim email pengaturan ulang kata sandi.",
+                fillAllFields: "Silakan isi semua kolom.",
+                passwordMinLength: "Kata sandi harus minimal 6 karakter.",
+                passwordsDoNotMatch: "Kata sandi tidak cocok.",
+                errorSavingBusinessProfile: "Gagal menyimpan profil bisnis.",
+                fillAllBusinessProfileFields: "Silakan isi semua kolom profil bisnis.",
+                businessProfileSavedSuccessfully: "Profil bisnis berhasil disimpan!",
+                languageSavedSuccessfully: "Bahasa berhasil disimpan!",
+                failedToSaveLanguageSettings: "Gagal menyimpan pengaturan bahasa.",
+                failedToLoadSettings: "Gagal memuat pengaturan.",
+                failedToLoadProducts: "Gagal memuat produk.",
+                failedToLoadTransactionHistory: "Gagal memuat riwayat transaksi.",
+                viewDetailsButton: "Lihat Detail",
+                hideDetailsButton: "Sembunyikan Detail",
+                viewReceiptButton: "Struk",
+                failedToPrintReceipt: "Gagal mencetak struk. Pastikan aplikasi jembatan printer berjalan dan terhubung." // New translation
+            },
+            en: {
+                appTitle: "Kaspocket",
+                forgotPassword: "Forgot Password?",
+                signIn: "Sign In",
+                noAccountSignUp: "Don't have an account? Sign Up",
+                createAccount: "Create your account",
+                fullNamePlaceholder: "Full Name",
+                passwordPlaceholder: "Password",
+                confirmPasswordPlaceholder: "Confirm Password",
+                signUp: "Sign Up",
+                alreadyAccountSignIn: "Already have an account? Sign In",
+                dashboardTitle: "Kaspocket Dashboard",
+                logoutButton: "Logout",
+                welcomeMessage: "Welcome,",
+                openCashier: "Open Cashier",
+                manageProducts: "Manage Products",
+                transactionHistory: "Transaction History",
+                viewReports: "View Reports",
+                settings: "Settings",
+                addNewProduct: "Add New Product",
+                productNameLabel: "Product Name",
+                productNamePlaceholder: "Product Name",
+                priceLabel: "Price",
+                pricePlaceholder: "Price",
+                stockLabel: "Stock",
+                stockPlaceholder: "Stock",
+                productImageLabel: "Product Image",
+                addProductButton: "Add Product",
+                updateProductButton: "Update Product",
+                cancelEditButton: "Cancel Edit",
+                productListTitle: "Product List",
+                noProductsMessage: "No products added yet.",
+                posTitle: "Kaspocket POS",
+                searchProductPlaceholder: "Search product",
+                emptyCartMessage: "Cart is empty.",
+                taxLabel: "Tax (%)",
+                discountLabel: "Discount (%)",
+                paymentMethodLabel: "Payment Method",
+                cashOption: "Cash",
+                creditOption: "Credit",
+                debitOption: "Debit",
+                bankTransferOption: "Bank Transfer",
+                eWalletOption: "E-wallet",
+                qrisOption: "QRIS",
+                totalLabel: "Total:",
+                payButton: "Pay",
+                transactionHistoryTitle: "Transaction History",
+                noTransactionsMessage: "No transactions yet.",
+                reportsTitle: "Reports",
+                dailyReport: "Daily",
+                weeklyReport: "Weekly",
+                monthlyReport: "Monthly",
+                salesTrend: "Sales Trend",
+                last30Days: "Last 30 Days",
+                keyMetrics: "Key Metrics",
+                totalSales: "Total Sales",
+                averageTransaction: "Average Transaction",
+                bestSellingProduct: "Best Selling Product",
+                analyzeReportButton: "Analyze Report with AI",
+                aiReportAnalysisTitle: "AI Report Analysis",
+                analyzingReport: "Analyzing report...",
+                reportAnalysisSuccess: "Report analysis successful!",
+                reportAnalysisFailed: "Failed to analyze report. Please try again.",
+                businessProfileTitle: "Business Profile",
+                businessNameLabel: "Business Name",
+                businessNamePlaceholder: "Business Name",
+                addressLabel: "Address",
+                addressPlaceholder: "Address",
+                phoneNumberLabel: "Phone Number",
+                phoneNumberPlaceholder: "Phone Number",
+                saveProfileButton: "Save Profile",
+                transactionSettingsTitle: "Transaction Settings",
+                paymentMethodsLabel: "Payment Methods",
+                taxLabel: "Tax",
+                integrationsTitle: "Integrations",
+                receiptPrinterLabel: "Receipt Printer",
+                languageSettingsTitle: "Language Settings",
+                languageLabel: "Language",
+                setTaxRateTitle: "Set Tax Rate",
+                taxRateLabel: "Tax Rate (%)",
+                saveTaxRateButton: "Save Tax Rate",
+                designReceiptTitle: "Design Receipt",
+                receiptHeaderLabel: "Receipt Header Text",
+                receiptHeaderPlaceholder: "Thank you for your purchase!",
+                receiptFooterLabel: "Receipt Footer Text",
+                receiptFooterPlaceholder: "Visit us again soon!",
+                saveReceiptDesignButton: "Save Receipt Design",
+                receiptDesignDisclaimer: "Disclaimer: Full WYSIWYG receipt design is not supported in this browser environment. This feature provides basic header/footer customization.",
+                indonesianLanguage: "Bahasa Indonesia",
+                englishLanguage: "English",
+                saveLanguageButton: "Save Language",
+                receiptTitle: "Receipt",
+                dateLabel: "Date:",
+                transactionIdLabel: "Transaction ID:",
+                generatePdfButton: "Generate PDF",
+                sharePdfButton: "Share",
+                printReceiptButton: "Print Receipt", // New translation
+                outOfStock: "Out of Stock",
+                cannotAddMore: "Cannot add more",
+                maximumStockReached: "Maximum stock reached.",
+                isOutOfStock: "is out of stock.",
+                cartEmpty: "Cart Empty",
+                addToCartBeforeProcessing: "Please add items to the cart before processing the transaction.",
+                transactionSuccess: "Success",
+                transactionProcessedSuccessfully: "Transaction processed successfully!",
+                transactionError: "Error",
+                failedToProcessTransaction: "Failed to process transaction. Please try again.",
+                confirmDelete: "Confirm Delete",
+                areYouYousureDeleteProduct: "Apakah Anda yakin ingin menghapus produk ini?",
+                deleteButton: "Hapus",
+                productDeletedSuccessfully: "Product deleted successfully!",
+                failedToDeleteProduct: "Failed to delete product.",
+                productUpdatedSuccessfully: "Product updated successfully!",
+                productAddedSuccessfully: "Product added successfully!",
+                failedToSaveProduct: "Failed to save product.",
+                enterValidProductDetails: "Please enter valid product name, positive price, and non-negative stock.",
+                failedToUploadImage: "Failed to upload image.",
+                printingReceipt: "Struk sedang dibuat PDF...",
+                pdfGeneratedSuccessfully: "PDF berhasil dibuat!",
+                failedToGeneratePdf: "Gagal membuat PDF.",
+                webShareApiNotSupported: "Web Share API tidak didukung di browser ini.",
+                receiptDesignSavedSuccessfully: "Desain struk berhasil disimpan!",
+                failedToSaveReceiptDesign: "Failed to save receipt design.",
+                failedToSignIn: "Failed to sign in. Please check your credentials.",
+                userNotFound: "No user found with this email.",
+                incorrectPassword: "Incorrect password.",
+                invalidEmailFormat: "Invalid email format.",
+                enterEmailAndPassword: "Please enter email and password.",
+                accountCreatedSuccessfully: "Account created successfully! You are now signed in.",
+                failedToCreateAccount: "Failed to create account.",
+                emailAlreadyInUse: "This email is already in use.",
+                passwordTooWeak: "Password is too weak.",
+                failedToLogout: "Failed to log out.",
+                enterEmailForReset: "Please enter your email in the login field to reset your password.",
+                passwordResetLinkSent: "Password reset link has been sent to your email address.",
+                passwordResetFailed: "Password Reset Failed",
+                failedToSendResetEmail: "Failed to send password reset email.",
+                fillAllFields: "Please fill in all fields.",
+                passwordMinLength: "Password must be at least 6 characters.",
+                passwordsDoNotMatch: "Passwords do not match.",
+                errorSavingBusinessProfile: "Failed to save business profile.",
+                fillAllBusinessProfileFields: "Please fill in all business profile fields.",
+                businessProfileSavedSuccessfully: "Business profile saved successfully!",
+                languageSavedSuccessfully: "Language saved successfully!",
+                failedToSaveLanguageSettings: "Failed to save language settings.",
+                failedToLoadSettings: "Failed to load settings.",
+                failedToLoadProducts: "Failed to load products.",
+                failedToLoadTransactionHistory: "Failed to load transaction history.",
+                viewDetailsButton: "View Details",
+                hideDetailsButton: "Hide Details",
+                viewReceiptButton: "Receipt",
+                failedToPrintReceipt: "Failed to print receipt. Ensure the printer bridge application is running and connected." // New translation
+            }
+        };
+
+        // --- UI Element References ---
+        const loginPage = document.getElementById('loginPage');
+        const registerPage = document.getElementById('registerPage');
+        const dashboardPage = document.getElementById('dashboardPage');
+        const productManagementPage = document.getElementById('productManagementPage');
+        const cashierPage = document.getElementById('cashierPage');
+        const transactionHistoryPage = document.getElementById('transactionHistoryPage');
+        const reportPage = document.getElementById('reportPage');
+        const settingsPage = document.getElementById('settingsPage');
+
+        const loginEmailInput = document.getElementById('loginEmail');
+        const loginPasswordInput = document.getElementById('loginPassword');
+        const signInButton = document.getElementById('signInButton');
+        const signUpLink = document.getElementById('signUpLink');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+        const registerFullNameInput = document.getElementById('registerFullName');
+        const registerEmailInput = document.getElementById('registerEmail');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const registerConfirmPasswordInput = document.getElementById('registerConfirmPassword');
+        const signUpButton = document.getElementById('signUpButton');
+        const signInLink = document.getElementById('signInLink');
+
+        const currentUserIdDisplay = document.getElementById('currentUserId');
+        const logoutButton = document.getElementById('logoutButton');
+        const goToCashierButton = document.getElementById('goToCashierButton');
+        const goToProductManagementButton = document.getElementById('goToProductManagementButton');
+        const goToTransactionHistoryButton = document.getElementById('goToTransactionHistoryButton');
+        const goToReportsButton = document.getElementById('goToReportsButton');
+        const goToSettingsButton = document.getElementById('goToSettingsButton');
+        const goToSettingsFromCashier = document.getElementById('goToSettingsFromCashier');
+
+        const backToDashboardFromProducts = document.getElementById('backToDashboardFromProducts');
+        const productForm = document.getElementById('productForm');
+        const productIdInput = document.getElementById('productId');
+        const productNameInput = document.getElementById('productName');
+        const productPriceInput = document.getElementById('productPrice');
+        const productStockInput = document.getElementById('productStock');
+        const saveProductButton = document.getElementById('saveProductButton');
+        const cancelEditButton = document.getElementById('cancelEditButton');
+        const productFormTitle = document.getElementById('productFormTitle');
+        const productListDiv = document.getElementById('productList');
+        const noProductsMessage = document.getElementById('noProductsMessage');
+        const productImageInput = document.getElementById('productImage');
+        const productImagePreview = document.getElementById('productImagePreview');
+
+        const backToDashboardFromCashier = document.getElementById('backToDashboardFromCashier');
+        const productSearchInput = document.getElementById('productSearch');
+        const availableProductsDiv = document.getElementById('availableProducts');
+        const noAvailableProductsMessage = document.getElementById('noAvailableProductsMessage');
+        const cartItemsDiv = document.getElementById('cartItems');
+        const emptyCartMessage = document.getElementById('emptyCartMessage');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        const processTransactionButton = document.getElementById('processTransactionButton');
+        // Removed taxInput from cashier page (HTML and JS reference)
+        const discountInput = document.getElementById('discountInput');
+        const paymentMethodSelect = document.getElementById('paymentMethodSelect');
+
+        const backToDashboardFromTransactions = document.getElementById('backToDashboardFromTransactions');
+        const transactionListDiv = document.getElementById('transactionList');
+        const noTransactionsMessage = document.getElementById('noTransactionsMessage');
+
+        const backToDashboardFromReports = document.getElementById('backToDashboardFromReports');
+        const reportPeriodDaily = document.getElementById('reportPeriodDaily');
+        const reportPeriodWeekly = document.getElementById('reportPeriodWeekly');
+        const reportPeriodMonthly = document.getElementById('reportPeriodMonthly');
+        const salesTrendAmount = document.getElementById('salesTrendAmount');
+        const salesTrendPeriod = document.getElementById('salesTrendPeriod');
+        const salesTrendChange = document.getElementById('salesTrendChange');
+        const totalSalesAmount = document.getElementById('totalSalesAmount');
+        const totalSalesChange = document.getElementById('totalSalesChange');
+        const avgTransactionAmount = document.getElementById('avgTransactionAmount');
+        const avgTransactionChange = document.getElementById('avgTransactionChange');
+        const bestSellingProduct = document.getElementById('bestSellingProduct');
+        const bestSellingProductChange = document.getElementById('bestSellingProductChange');
+        const analyzeReportButton = document.getElementById('analyzeReportButton');
+        const aiAnalysisOutputDiv = document.getElementById('aiAnalysisOutput');
+        const aiAnalysisLoading = document.getElementById('aiAnalysisLoading');
+        const aiAnalysisResult = document.getElementById('aiAnalysisResult');
+
+
+        const backToDashboardFromSettings = document.getElementById('backToDashboardFromSettings');
+        const businessProfileForm = document.getElementById('businessProfileForm');
+        const businessNameInput = document.getElementById('businessName');
+        const businessAddressInput = document.getElementById('businessAddress');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const saveBusinessProfileButton = document.getElementById('saveBusinessProfileButton');
+
+        const taxSetting = document.getElementById('taxSetting');
+        const receiptPrinterSetting = document.getElementById('receiptPrinterSetting');
+        const languageSetting = document.getElementById('languageSetting');
+
+        const currentTaxRateDisplay = document.getElementById('currentTaxRate');
+        const currentLanguageDisplay = document.getElementById('currentLanguage');
+
+        const taxModal = document.getElementById('taxModal');
+        const closeTaxModalButton = document.getElementById('closeTaxModal');
+        const taxForm = document.getElementById('taxForm');
+        const taxRateInput = document.getElementById('taxRateInput');
+
+        const printerSettingsModal = document.getElementById('printerSettingsModal');
+        const closePrinterSettingsModalButton = document.getElementById('closePrinterSettingsModal');
+        const receiptHeaderInput = document.getElementById('receiptHeaderInput');
+        const receiptFooterInput = document.getElementById('receiptFooterInput');
+        const saveReceiptDesignButton = document.getElementById('saveReceiptDesignButton');
+
+        const languageSettingsModal = document.getElementById('languageSettingsModal');
+        const closeLanguageSettingsModalButton = document = document.getElementById('closeLanguageSettingsModal');
+        const saveLanguageButton = document.getElementById('saveLanguageButton');
+
+        const messageModal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalCloseButton = document.getElementById('modalCloseButton');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        const receiptModal = document.getElementById('receiptModal');
+        const closeReceiptModalButton = document.getElementById('closeReceiptModal');
+        const receiptDateSpan = document.getElementById('receiptDate');
+        const receiptTransactionIdSpan = document.getElementById('receiptTransactionId');
+        const receiptItemsDiv = document.getElementById('receiptItems');
+        const receiptTotalSpan = document.getElementById('receiptTotal');
+        const receiptBusinessNameSpan = document.getElementById('receiptBusinessName');
+        const receiptBusinessAddressSpan = document.getElementById('receiptBusinessAddress');
+        const receiptPhoneNumberSpan = document.getElementById('receiptPhoneNumber');
+        const receiptPaymentMethodSpan = document.getElementById('receiptPaymentMethod');
+        const receiptCustomHeaderSpan = document.getElementById('receiptCustomHeader');
+        const receiptCustomFooterSpan = document.getElementById('receiptCustomFooter');
+        const generatePdfButton = document.getElementById('generatePdfButton');
+        const shareReceiptButton = document.getElementById('shareReceiptButton');
+        const printReceiptButton = document.getElementById('printReceiptButton'); // New print button
+
+
+        // --- Utility Functions ---
+
+        /**
+         * Translates all elements with `data-translate` or `data-translate-placeholder` attributes.
+         */
+        function applyTranslations() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.dataset.translate;
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                const key = element.dataset.translatePlaceholder;
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+
+            // Update specific elements that are not covered by data-translate
+            const productFormTitleElement = document.getElementById('productFormTitle');
+            const saveProductButtonElement = document.getElementById('saveProductButton');
+            const cancelEditButtonElement = document.getElementById('cancelEditButton');
+            const salesTrendPeriodElement = document.getElementById('salesTrendPeriod');
+            const paymentMethodSelectElement = document.getElementById('paymentMethodSelect');
+            const reportPeriodDailySpan = document.querySelector('#reportPeriodDaily + span');
+            const reportPeriodWeeklySpan = document.querySelector('#reportPeriodWeekly + span');
+            const reportPeriodMonthlySpan = document.querySelector('#reportPeriodMonthly + span');
+
+
+            if (currentLanguage === 'id') {
+                if (productFormTitleElement) productFormTitleElement.textContent = productIdInput.value ? 'Edit Produk' : 'Tambah Produk Baru';
+                if (saveProductButtonElement) saveProductButtonElement.textContent = productIdInput.value ? 'Perbarui Produk' : 'Tambah Produk';
+                if (cancelEditButtonElement) cancelEditButtonElement.textContent = 'Batal Edit';
+                if (salesTrendPeriodElement) salesTrendPeriodElement.textContent = '30 Hari Terakhir'; // Default for monthly
+                // Update payment method options
+                if (paymentMethodSelectElement) {
+                    const cashOption = paymentMethodSelectElement.querySelector('option[value="Tunai"]');
+                    const creditOption = paymentMethodSelectElement.querySelector('option[value="Kredit"]');
+                    const debitOption = paymentMethodSelectElement.querySelector('option[value="Debit"]');
+                    const bankTransferOption = paymentMethodSelectElement.querySelector('option[value="Transfer Bank"]');
+                    const eWalletOption = paymentMethodSelectElement.querySelector('option[value="E-wallet"]');
+                    const qrisOption = paymentMethodSelectElement.querySelector('option[value="QRIS"]');
+
+                    if (cashOption) cashOption.textContent = translations.id.cashOption;
+                    if (creditOption) creditOption.textContent = translations.id.creditOption;
+                    if (debitOption) debitOption.textContent = translations.id.debitOption;
+                    if (bankTransferOption) bankTransferOption.textContent = translations.id.bankTransferOption;
+                    if (eWalletOption) eWalletOption.textContent = translations.id.eWalletOption;
+                    if (qrisOption) qrisOption.textContent = translations.id.qrisOption;
+                }
+
+                // Update report period labels
+                if (reportPeriodDailySpan) reportPeriodDailySpan.textContent = translations.id.dailyReport;
+                if (reportPeriodWeeklySpan) reportPeriodWeeklySpan.textContent = translations.id.weeklyReport;
+                if (reportPeriodMonthlySpan) reportPeriodMonthlySpan.textContent = translations.id.monthlyReport;
+
+            } else { // English
+                if (productFormTitleElement) productFormTitleElement.textContent = productIdInput.value ? 'Edit Product' : 'Add New Product';
+                if (saveProductButtonElement) saveProductButtonElement.textContent = productIdInput.value ? 'Update Product' : 'Add Product';
+                if (cancelEditButtonElement) cancelEditButtonElement.textContent = 'Cancel Edit';
+                if (salesTrendPeriodElement) salesTrendPeriodElement.textContent = 'Last 30 Days'; // Default for monthly
+                // Update payment method options
+                if (paymentMethodSelectElement) {
+                    const cashOption = paymentMethodSelectElement.querySelector('option[value="Tunai"]');
+                    const creditOption = paymentMethodSelectElement.querySelector('option[value="Kredit"]');
+                    const debitOption = paymentMethodSelectElement.querySelector('option[value="Debit"]');
+                    const bankTransferOption = paymentMethodSelectElement.querySelector('option[value="Kredit"]'); // Typo in original, fixed to "Bank Transfer"
+                    const eWalletOption = paymentMethodSelectElement.querySelector('option[value="E-wallet"]');
+                    const qrisOption = paymentMethodSelectElement.querySelector('option[value="QRIS"]');
+
+                    if (cashOption) cashOption.textContent = translations.en.cashOption;
+                    if (creditOption) creditOption.textContent = translations.en.creditOption;
+                    if (debitOption) debitOption.textContent = translations.en.debitOption;
+                    if (bankTransferOption) bankTransferOption.textContent = translations.en.bankTransferOption;
+                    if (eWalletOption) eWalletOption.textContent = translations.en.eWalletOption;
+                    if (qrisOption) qrisOption.textContent = translations.en.qrisOption;
+                }
+
+                // Update report period labels
+                if (reportPeriodDailySpan) reportPeriodDailySpan.textContent = translations.en.dailyReport;
+                if (reportPeriodWeeklySpan) reportPeriodWeeklySpan.textContent = translations.en.weeklyReport;
+                if (reportPeriodMonthlySpan) reportPeriodMonthlySpan.textContent = translations.en.monthlyReport;
+            }
+        }
+
+        /**
+         * Sets the current language and applies translations.
+         * @param {string} langCode - The language code ('id' or 'en').
+         */
+        function setLanguage(langCode) {
+            currentLanguage = langCode;
+            applyTranslations();
+            // Re-render components that have dynamic content based on language
+            renderProducts();
+            renderAvailableProducts(productSearchInput.value);
+            renderCart();
+            renderTransactionHistory(transactions);
+            renderReports();
+            renderBusinessProfile();
+        }
+
+        /**
+         * Shows a custom modal message to the user.
+         * @param {string} titleKey - The translation key for the title.
+         * @param {string} messageKey - The translation key for the message.
+         * @param {Array<string>} messageArgs - Optional arguments to format the message.
+         */
+        function showMessage(titleKey, messageKey, messageArgs = []) {
+            const title = translations[currentLanguage][titleKey] || titleKey;
+            let message = translations[currentLanguage][messageKey] || messageKey;
+
+            // Simple string formatting for messages
+            messageArgs.forEach((arg, index) => {
+                message = message.replace(`{${index}}`, arg);
+            });
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the custom modal message.
+         */
+        function hideMessage() {
+            messageModal.classList.add('hidden');
+        }
+
+        /**
+         * Shows the loading overlay.
+         */
+        function showLoading() {
+            loadingOverlay.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the loading overlay.
+         */
+        function hideLoading() {
+            loadingOverlay.classList.add('hidden');
+        }
+
+        /**
+         * Hides all main application pages.
+         */
+        function hideAllPages() {
+            loginPage.classList.add('hidden');
+            registerPage.classList.add('hidden');
+            dashboardPage.classList.add('hidden');
+            productManagementPage.classList.add('hidden');
+            cashierPage.classList.add('hidden');
+            transactionHistoryPage.classList.add('hidden');
+            reportPage.classList.add('hidden');
+            settingsPage.classList.add('hidden');
+        }
+
+        /**
+         * Displays the specified page and hides others.
+         * @param {HTMLElement} pageElement - The page element to display.
+         */
+        function showPage(pageElement) {
+            hideAllPages();
+            pageElement.classList.remove('hidden');
+        }
+
+        /**
+         * Formats a number as Indonesian Rupiah.
+         * @param {number} amount - The amount to format.
+         * @returns {string} - Formatted currency string.
+         */
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        /**
+         * Calculates the total amount in the cart, applying tax and discount.
+         * @returns {number} The calculated total.
+         */
+        function calculateCartTotal() {
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Use tax rate from business profile settings
+            const taxRate = businessProfile.taxRate || 0;
+            const discountRate = parseFloat(discountInput.value) || 0;
+
+            let total = subtotal;
+
+            total += total * (taxRate / 100);
+            total -= total * (discountRate / 100);
+
+            return Math.max(0, total);
+        }
+
+        // --- Authentication Logic ---
+
+        /**
+         * Handles user sign-in.
+         */
+        async function handleSignIn() {
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value.trim();
+
+            if (!email || !password) {
+                showMessage('error', 'enterEmailAndPassword');
+                return;
+            }
+
+            showLoading();
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Sign In Error:", error);
+                let errorMessageKey = 'failedToSignIn';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessageKey = 'userNotFound';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessageKey = 'incorrectPassword';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessageKey = 'invalidEmailFormat';
+                }
+                showMessage('error', errorMessageKey);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles user registration.
+         */
+        async function handleSignUp() {
+            const fullName = registerFullNameInput.value.trim();
+            const email = registerEmailInput.value.trim();
+            const password = registerPasswordInput.value.trim();
+            const confirmPassword = registerConfirmPasswordInput.value.trim();
+
+            if (!fullName || !email || !password || !confirmPassword) {
+                showMessage('error', 'fillAllFields');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('error', 'passwordMinLength');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('error', 'passwordsDoNotMatch');
+                return;
+            }
+
+            showLoading();
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                await setDoc(doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", user.uid), {
+                    fullName: fullName,
+                    email: email,
+                    createdAt: serverTimestamp()
+                });
+
+                await setDoc(doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", user.uid, "settings", "profile"), {
+                    businessName: "My Business",
+                    address: "Jl. Contoh No. 123",
+                    phoneNumber: "081234567890",
+                    paymentMethod: "Tunai", // Default payment method (fixed options now)
+                    taxRate: 0, // Default tax rate
+                    language: "id", // Default language for new users
+                    receiptHeader: "", // Default custom receipt header
+                    receiptFooter: "" // Default custom receipt footer
+                });
+
+                showMessage('transactionSuccess', 'accountCreatedSuccessfully');
+            } catch (error) {
+                console.error("Sign Up Error:", error);
+                let errorMessageKey = 'failedToCreateAccount';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessageKey = 'emailAlreadyInUse';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessageKey = 'invalidEmailFormat';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessageKey = 'passwordTooWeak';
+                }
+                showMessage('error', errorMessageKey);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles user logout.
+         */
+        async function handleLogout() {
+            showLoading();
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout Error:", error);
+                showMessage('error', 'failedToLogout');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles forgot password functionality.
+         */
+        async function handleForgotPassword() {
+            const email = loginEmailInput.value.trim();
+            if (!email) {
+                showMessage('forgotPassword', 'enterEmailForReset');
+                return;
+            }
+
+            showLoading();
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showMessage('passwordReset', 'passwordResetLinkSent');
+            }
+            catch (error) {
+                console.error("Forgot Password Error:", error);
+                let errorMessageKey = 'failedToSendResetEmail';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessageKey = 'userNotFound';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessageKey = 'invalidEmailFormat';
+                }
+                showMessage('passwordResetFailed', errorMessageKey);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // --- Product Management Logic ---
+
+        /**
+         * Renders the list of products.
+         */
+        function renderProducts() {
+            productListDiv.innerHTML = '';
+            if (products.length === 0) {
+                noProductsMessage.classList.remove('hidden');
+                noProductsMessage.textContent = translations[currentLanguage].noProductsMessage;
+                return;
+            } else {
+                noProductsMessage.classList.add('hidden');
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white p-4 rounded-lg shadow-sm flex items-center justify-between border border-gray-200';
+                productCard.innerHTML = `
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800">${product.name}</h4>
+                        <p class="text-gray-600">${translations[currentLanguage].priceLabel}: ${formatCurrency(product.price)}</p>
+                        <p class="text-gray-600">${product.stock > 0 ? translations[currentLanguage].stockLabel + ': ' + product.stock : translations[currentLanguage].outOfStock}</p>
+                        ${product.imageUrl ? `<img src="${product.imageUrl}" alt="Product Image" class="mt-2 w-16 h-16 object-cover rounded-lg">` : ''}
+                    </div>
+                    <div class="flex space-x-2">
+                        <button data-id="${product.id}" class="edit-product-btn bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-full text-sm transition-colors">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button data-id="${product.id}" class="delete-product-btn bg-red-500 hover:bg-red-600 text-white p-2 rounded-full text-sm transition-colors">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                productListDiv.appendChild(productCard);
+            });
+
+            document.querySelectorAll('.edit-product-btn').forEach(button => {
+                button.addEventListener('click', (event) => editProduct(event.target.dataset.id || event.target.closest('button').dataset.id));
+            });
+            document.querySelectorAll('.delete-product-btn').forEach(button => {
+                button.addEventListener('click', (event) => deleteProduct(event.target.dataset.id || event.target.closest('button').dataset.id));
+            });
+        }
+
+        /**
+         * Adds or updates a product in Firestore.
+         * @param {Event} event - The form submission event.
+         */
+        async function handleProductFormSubmit(event) {
+            event.preventDefault();
+            showLoading(); // Show loading at the start of form submission
+
+            const id = productIdInput.value; // This should be empty for new, or have an ID for edit
+            const name = productNameInput.value.trim();
+            const price = parseFloat(productPriceInput.value);
+            const stock = parseInt(productStockInput.value);
+            const imageFile = productImageInput.files[0];
+
+            console.log("Attempting to save product. Current User ID:", currentUserId);
+            console.log("Product ID (for edit):", id);
+            console.log("Product Name:", name, "Price:", price, "Stock:", stock);
+            console.log("Image file selected:", !!imageFile);
+
+            if (!currentUserId) {
+                showMessage('error', 'failedToSaveProduct', ['User not authenticated. Please sign in.']); // More specific message
+                hideLoading();
+                return;
+            }
+
+            if (!name || isNaN(price) || isNaN(stock) || price <= 0 || stock < 0) {
+                showMessage('error', 'enterValidProductDetails');
+                hideLoading();
+                return;
+            }
+
+            let imageUrl = '';
+            if (imageFile) {
+                console.log("Original image file size:", imageFile.size / 1024 / 1024, "MB");
+                try {
+                    // Compress the image before uploading
+                    const options = {
+                        maxSizeMB: 1,           // Max size in MB
+                        maxWidthOrHeight: 1024, // Max width or height in pixels
+                        useWebWorker: true      // Use web worker for better performance
+                    };
+                    const compressedFile = await imageCompression(imageFile, options);
+                    console.log("Compressed image file size:", compressedFile.size / 1024 / 1024, "MB");
+
+                    const imageRef = ref(storage, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${currentUserId}/product_images/${Date.now()}-${compressedFile.name}`);
+                    const snapshot = await uploadBytes(imageRef, compressedFile); // Upload compressed file
+                    imageUrl = await getDownloadURL(snapshot.ref);
+                    console.log("Image uploaded successfully. URL:", imageUrl);
+                } catch (err) {
+                    console.error("Image upload error:", err);
+                    showMessage('error', 'failedToUploadImage');
+                    hideLoading(); // Hide loading if image upload fails
+                    return; // Stop further processing if image upload fails
+                }
+            } else if (id) {
+                const existingProduct = products.find(p => p.id === id);
+                if (existingProduct) {
+                    imageUrl = existingProduct.imageUrl || '';
+                    console.log("No new image selected, retaining existing image URL:", imageUrl);
+                }
+            }
+
+            const productData = {
+                name,
+                price,
+                stock,
+                imageUrl,
+                userId: currentUserId // This is important for security rules and data partitioning
+            };
+
+            try {
+                const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+
+                if (id) {
+                    // This branch is for updating an existing product
+                    console.log("Attempting to UPDATE product with ID:", id, "with data:", productData);
+                    await updateDoc(doc(productsCollectionRef, id), productData);
+                    showMessage('transactionSuccess', 'productUpdatedSuccessfully');
+                } else {
+                    // This branch is for adding a new product
+                    console.log("Attempting to ADD new product with data:", productData);
+                    await addDoc(productsCollectionRef, productData);
+                    showMessage('transactionSuccess', 'productAddedSuccessfully');
+                }
+                console.log("Product save operation completed successfully.");
+                // Reset form and UI after successful save/update
+                productForm.reset();
+                productIdInput.value = ''; // Clear hidden ID field
+                productFormTitle.textContent = translations[currentLanguage].addNewProduct;
+                saveProductButton.textContent = translations[currentLanguage].addProductButton;
+                cancelEditButton.classList.add('hidden');
+                productImagePreview.classList.add('hidden');
+                productImagePreview.src = '';
+            } catch (error) {
+                console.error("Product Save Error (Firestore operation failed):", error);
+                showMessage('error', 'failedToSaveProduct');
+            } finally {
+                hideLoading(); // Ensure loading is hidden after the entire form submission process
+            }
+        }
+
+        /**
+         * Populates the form for editing a product.
+         * @param {string} productId - The ID of the product to edit.
+         */
+        function editProduct(productId) {
+            const productToEdit = products.find(p => p.id === productId);
+            if (productToEdit) {
+                productIdInput.value = productToEdit.id;
+                productNameInput.value = productToEdit.name;
+                productPriceInput.value = productToEdit.price;
+                productStockInput.value = productToEdit.stock;
+                productFormTitle.textContent = translations[currentLanguage].updateProductButton;
+                saveProductButton.textContent = translations[currentLanguage].updateProductButton;
+                cancelEditButton.classList.remove('hidden');
+
+                if (productToEdit.imageUrl) {
+                    productImagePreview.src = productToEdit.imageUrl;
+                    productImagePreview.classList.remove('hidden');
+                } else {
+                    productImagePreview.classList.add('hidden');
+                    productImagePreview.src = '';
+                }
+            }
+        }
+
+        /**
+         * Deletes a product from Firestore.
+         * @param {string} productId - The ID of the product to delete.
+         */
+        async function deleteProduct(productId) {
+            modalTitle.textContent = translations[currentLanguage].confirmDelete;
+            modalMessage.textContent = translations[currentLanguage].areYouSureDeleteProduct;
+            messageModal.classList.remove('hidden');
+
+            const confirmAction = new Promise((resolve) => {
+                modalCloseButton.onclick = () => {
+                    hideMessage();
+                    resolve(false);
+                };
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = translations[currentLanguage].deleteButton;
+                confirmBtn.className = 'bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors ml-4';
+                confirmBtn.onclick = () => {
+                    hideMessage();
+                    resolve(true);
+                    confirmBtn.remove();
+                };
+                messageModal.querySelector('.text-center').appendChild(confirmBtn);
+            });
+
+            const confirmed = await confirmAction;
+            if (!confirmed) {
+                return;
+            }
+
+            showLoading();
+            try {
+                const productDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products", productId);
+                await deleteDoc(productDocRef);
+                showMessage('transactionSuccess', 'productDeletedSuccessfully');
+            } catch (error) {
+                console.error("Product Delete Error:", error);
+                showMessage('error', 'failedToDeleteProduct');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // --- Cashier Logic ---
+
+        /**
+         * Renders available products for the cashier.
+         * @param {string} searchTerm - Optional search term to filter products.
+         */
+        function renderAvailableProducts(searchTerm = '') {
+            availableProductsDiv.innerHTML = '';
+            const filteredProducts = products.filter(product =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase()) && product.stock > 0
+            );
+
+            if (filteredProducts.length === 0) {
+                noAvailableProductsMessage.classList.remove('hidden');
+                noAvailableProductsMessage.textContent = translations[currentLanguage].noProductsFound;
+                return;
+            } else {
+                noAvailableProductsMessage.classList.add('hidden');
+            }
+
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'flex flex-col gap-3 pb-3 bg-white p-3 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow';
+                productCard.setAttribute('data-id', product.id);
+                productCard.innerHTML = `
+                    <div class="w-full bg-gray-200 aspect-square rounded-lg flex items-center justify-center text-gray-500 text-sm overflow-hidden">
+                        ${product.imageUrl ? `<img src="${product.imageUrl}" alt="Product Image" class="w-full h-full object-cover">` : '<i class="fas fa-box text-5xl text-gray-400"></i>'}
+                    </div>
+                    <p class="text-[#111418] text-base font-medium leading-normal line-clamp-1">${product.name}</p>
+                    <p class="text-[#60758a] text-sm font-normal leading-normal line-clamp-1">${formatCurrency(product.price)}</p>
+                    <p class="text-gray-500 text-xs">${product.stock > 0 ? translations[currentLanguage].stockLabel + ': ' + product.stock : translations[currentLanguage].outOfStock}</p>
+                `;
+                availableProductsDiv.appendChild(productCard);
+            });
+
+            document.querySelectorAll('#availableProducts > div').forEach(card => {
+                card.addEventListener('click', (event) => {
+                    const productId = event.currentTarget.dataset.id;
+                    if (productId) {
+                        addToCart(productId);
+                    }
+                });
+            });
+        }
+
+        /**
+         * Adds a product to the cart.
+         * @param {string} productId - The ID of the product to add.
+         */
+        function addToCart(productId) {
+            const productToAdd = products.find(p => p.id === productId);
+            if (!productToAdd) return;
+
+            const existingCartItem = cart.find(item => item.productId === productId);
+
+            if (existingCartItem) {
+                if (existingCartItem.quantity < productToAdd.stock) {
+                    existingCartItem.quantity++;
+                } else {
+                    showMessage('outOfStock', 'cannotAddMore', [productToAdd.name, translations[currentLanguage].maximumStockReached]);
+                }
+            } else {
+                if (productToAdd.stock > 0) {
+                    cart.push({
+                        productId: productToAdd.id,
+                        name: productToAdd.name,
+                        price: productToAdd.price,
+                        quantity: 1
+                    });
+                } else {
+                    showMessage('outOfStock', 'isOutOfStock', [productToAdd.name]);
+                }
+            }
+            renderCart();
+        }
+
+        /**
+         * Renders the items in the cart.
+         */
+        function renderCart() {
+            cartItemsDiv.innerHTML = '';
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                emptyCartMessage.textContent = translations[currentLanguage].emptyCartMessage;
+                cartTotalSpan.textContent = formatCurrency(0);
+                processTransactionButton.disabled = true;
+                return;
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                processTransactionButton.disabled = false;
+            }
+
+            cart.forEach(item => {
+                const cartItemDiv = document.createElement('div');
+                cartItemDiv.className = 'flex items-center gap-4 bg-white px-4 min-h-[72px] py-2 justify-between border-b border-gray-100 last:border-b-0';
+                cartItemDiv.innerHTML = `
+                    <div class="flex flex-col justify-center flex-1">
+                        <p class="text-[#111418] text-base font-medium leading-normal line-clamp-1">${item.name}</p>
+                        <p class="text-[#60758a] text-sm font-normal leading-normal line-clamp-2">${formatCurrency(item.price)}</p>
+                    </div>
+                    <div class="shrink-0">
+                        <div class="flex items-center gap-2 text-[#111418]">
+                            <button data-id="${item.productId}" class="decrease-quantity-btn text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#f0f2f5] cursor-pointer hover:bg-gray-300 transition-colors">-</button>
+                            <input
+                                class="text-base font-medium leading-normal w-8 p-0 text-center bg-transparent focus:outline-0 focus:ring-0 focus:border-none border-none"
+                                type="number"
+                                value="${item.quantity}"
+                                readonly
+                            />
+                            <button data-id="${item.productId}" class="increase-quantity-btn text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-[#f0f2f5] cursor-pointer hover:bg-gray-300 transition-colors">+</button>
+                            <button data-id="${item.productId}" class="remove-from-cart-btn bg-red-500 hover:bg-red-600 text-white p-1 rounded-full text-xs transition-colors w-7 h-7 flex items-center justify-center">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                cartItemsDiv.appendChild(cartItemDiv);
+            });
+
+            cartTotalSpan.textContent = formatCurrency(calculateCartTotal());
+            document.querySelectorAll('.decrease-quantity-btn').forEach(button => {
+                button.addEventListener('click', (event) => updateCartQuantity(event.target.dataset.id || event.target.closest('button').dataset.id, -1));
+            });
+            document.querySelectorAll('.increase-quantity-btn').forEach(button => {
+                button.addEventListener('click', (event) => updateCartQuantity(event.target.dataset.id || event.target.closest('button').dataset.id, 1));
+            });
+            document.querySelectorAll('.remove-from-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => removeFromCart(event.target.dataset.id || event.target.closest('button').dataset.id));
+            });
+        }
+
+        /**
+         * Updates the quantity of an item in the cart.
+         * @param {string} productId - The ID of the product.
+         * @param {number} change - The amount to change the quantity by (+1 or -1).
+         */
+        function updateCartQuantity(productId, change) {
+            const itemIndex = cart.findIndex(item => item.productId === productId);
+            if (itemIndex > -1) {
+                const productInStock = products.find(p => p.id === productId);
+                if (!productInStock) return;
+
+                const currentQuantity = cart[itemIndex].quantity;
+                const newQuantity = currentQuantity + change;
+
+                if (newQuantity <= 0) {
+                    removeFromCart(productId);
+                } else if (newQuantity > productInStock.stock) {
+                    showMessage('outOfStock', 'cannotAddMore', [productInStock.name, translations[currentLanguage].maximumStockReached]);
+                } else {
+                    cart[itemIndex].quantity = newQuantity;
+                    renderCart();
+                }
+            }
+        }
+
+        /**
+         * Removes an item from the cart.
+         * @param {string} productId - The ID of the product to remove.
+         */
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.productId !== productId);
+            renderCart();
+        }
+
+        /**
+         * Processes the transaction: saves to Firestore, updates stock, clears cart.
+         */
+        async function processTransaction() {
+            if (cart.length === 0) {
+                showMessage('cartEmpty', 'addToCartBeforeProcessing');
+                return;
+            }
+
+            showLoading();
+            try {
+                const transactionItems = cart.map(item => ({
+                    productId: item.productId,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                }));
+                let subtotalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                // Use tax rate from business profile settings
+                const taxRate = businessProfile.taxRate || 0;
+                const discountRate = parseFloat(discountInput.value) || 0;
+                const paymentMethod = paymentMethodSelect.value;
+
+                let totalAmount = subtotalAmount;
+
+                totalAmount += totalAmount * (taxRate / 100);
+                totalAmount -= totalAmount * (discountRate / 100);
+                totalAmount = Math.max(0, totalAmount);
+
+
+                const transactionsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "transactions");
+                const newTransactionRef = await addDoc(transactionsCollectionRef, {
+                    userId: currentUserId,
+                    timestamp: serverTimestamp(),
+                    items: transactionItems,
+                    totalAmount: totalAmount,
+                    subtotalAmount: subtotalAmount, // Store subtotal amount
+                    appliedTaxRate: taxRate,
+                    appliedDiscountRate: discountRate,
+                    appliedPaymentMethod: paymentMethod
+                });
+
+                const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+                for (const item of cart) {
+                    const productDocRef = doc(productsCollectionRef, item.productId);
+                    const productDoc = await getDoc(productDocRef);
+                    if (productDoc.exists()) {
+                        const currentStock = productDoc.data().stock;
+                        await updateDoc(productDocRef, {
+                            stock: currentStock - item.quantity
+                        });
+                    }
+                }
+
+                cart = [];
+                renderCart();
+                showMessage('transactionSuccess', 'transactionProcessedSuccessfully');
+                // Pass the entire transaction data to showReceipt
+                showReceipt({
+                    id: newTransactionRef.id,
+                    timestamp: { toDate: () => new Date() }, // Mock timestamp for immediate display
+                    items: transactionItems,
+                    totalAmount: totalAmount,
+                    subtotalAmount: subtotalAmount,
+                    appliedTaxRate: taxRate,
+                    appliedDiscountRate: discountRate,
+                    appliedPaymentMethod: paymentMethod
+                });
+
+            } catch (error) {
+                console.error("Transaction Processing Error:", error);
+                showMessage('transactionError', 'failedToProcessTransaction');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Displays the receipt modal.
+         * @param {object} transactionData - The transaction object containing all details.
+         */
+        function showReceipt(transactionData) {
+            const { id, timestamp, items, totalAmount, subtotalAmount, appliedTaxRate, appliedDiscountRate, appliedPaymentMethod } = transactionData;
+
+            receiptDateSpan.textContent = timestamp.toDate().toLocaleString();
+            receiptTransactionIdSpan.textContent = id;
+            receiptPaymentMethodSpan.textContent = appliedPaymentMethod;
+
+            receiptBusinessNameSpan.textContent = businessProfile.businessName || translations[currentLanguage].businessNamePlaceholder;
+            receiptBusinessAddressSpan.textContent = businessProfile.address || translations[currentLanguage].addressPlaceholder;
+            receiptPhoneNumberSpan.textContent = businessProfile.phoneNumber || translations[currentLanguage].phoneNumberPlaceholder;
+            receiptCustomHeaderSpan.textContent = businessProfile.receiptHeader || ''; // Display custom header
+            receiptCustomFooterSpan.textContent = businessProfile.receiptFooter || ''; // Display custom footer
+
+            receiptItemsDiv.innerHTML = '';
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex justify-between text-sm text-gray-700 mb-1';
+                itemDiv.innerHTML = `
+                    <span>${item.name} (${item.quantity}x)</span>
+                    <span>${formatCurrency(item.price * item.quantity)}</span>
+                `;
+                receiptItemsDiv.appendChild(itemDiv);
+            });
+
+            // Display subtotal
+            const subtotalRow = document.createElement('div');
+            subtotalRow.className = 'flex justify-between text-sm text-gray-700 mb-1 font-semibold';
+            subtotalRow.innerHTML = `<span>Subtotal:</span><span>${formatCurrency(subtotalAmount)}</span>`;
+            receiptItemsDiv.appendChild(subtotalRow);
+
+
+            if (appliedTaxRate > 0) {
+                const taxAmount = subtotalAmount * (appliedTaxRate / 100);
+                const taxRow = document.createElement('div');
+                taxRow.className = 'flex justify-between text-sm text-gray-700 mb-1';
+                taxRow.innerHTML = `<span>${translations[currentLanguage].taxLabel} (${appliedTaxRate}%)</span><span>${formatCurrency(taxAmount)}</span>`;
+                receiptItemsDiv.appendChild(taxRow);
+            }
+            if (appliedDiscountRate > 0) {
+                const discountAmount = subtotalAmount * (appliedDiscountRate / 100); // Discount is usually on subtotal
+                const discountRow = document.createElement('div');
+                discountRow.className = 'flex justify-between text-sm text-gray-700 mb-1';
+                discountRow.innerHTML = `<span>${translations[currentLanguage].discountLabel} (${appliedDiscountRate}%)</span><span>-${formatCurrency(discountAmount)}</span>`;
+                receiptItemsDiv.appendChild(discountRow);
+            }
+
+            receiptTotalSpan.textContent = formatCurrency(totalAmount); // Use the stored totalAmount
+
+            receiptModal.classList.remove('hidden');
+
+            // Store transaction data for printing
+            receiptModal.currentTransactionData = transactionData;
+        }
+
+        /**
+         * Generates a PDF of the current receipt.
+         */
+        async function generateReceiptPdf() {
+            showMessage('generatePdfButton', 'printingReceipt'); // Use the updated message
+            try {
+                // Access jsPDF from global scope or import if not already
+                const doc = new jsPDF();
+
+                let y = 10;
+                const margin = 10;
+                const lineHeight = 7;
+                const maxWidth = 190; // A4 width is 210mm, leaving 10mm margin on each side
+
+                doc.setFontSize(16);
+                doc.text(businessProfile.businessName || translations[currentLanguage].businessNamePlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                y += lineHeight;
+
+                doc.setFontSize(10);
+                doc.text(businessProfile.address || translations[currentLanguage].addressPlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                y += lineHeight;
+                doc.text(businessProfile.phoneNumber || translations[currentLanguage].phoneNumberPlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                y += lineHeight;
+
+                if (businessProfile.receiptHeader) {
+                    doc.setFontSize(10);
+                    const headerLines = doc.splitTextToSize(businessProfile.receiptHeader, maxWidth);
+                    doc.text(headerLines, doc.internal.pageSize.getWidth() / 2, y + 2, { align: 'center' });
+                    y += (headerLines.length * lineHeight) + 2;
+                }
+
+                y += 5; // Spacer
+                doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y); // Horizontal line
+                y += 5;
+
+                doc.setFontSize(10);
+                doc.text(`${translations[currentLanguage].dateLabel} ${receiptDateSpan.textContent}`, margin, y);
+                y += lineHeight;
+                doc.text(`${translations[currentLanguage].transactionIdLabel} ${receiptTransactionIdSpan.textContent}`, margin, y);
+                y += lineHeight;
+                doc.text(`${translations[currentLanguage].paymentMethodLabel} ${receiptPaymentMethodSpan.textContent}`, margin, y);
+                y += 5;
+
+                doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y); // Horizontal line
+                y += 5;
+
+                doc.setFontSize(10);
+                // Items
+                const receiptItemsHtml = receiptItemsDiv.querySelectorAll('div');
+                receiptItemsHtml.forEach(itemDiv => {
+                    // Exclude the subtotal row from PDF generation if it's explicitly added in HTML
+                    if (!itemDiv.querySelector('span:first-child').textContent.includes('Subtotal')) {
+                        const name = itemDiv.querySelector('span:first-child').textContent;
+                        const price = itemDiv.querySelector('span:last-child').textContent;
+                        doc.text(name, margin, y);
+                        doc.text(price, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+                        y += lineHeight;
+                    }
+                });
+
+                y += 5;
+                doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y); // Horizontal line
+                y += 5;
+
+                doc.setFontSize(14);
+                doc.text(`${translations[currentLanguage].totalLabel} ${receiptTotalSpan.textContent}`, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+                y += lineHeight;
+
+                if (businessProfile.receiptFooter) {
+                    doc.setFontSize(10);
+                    const footerLines = doc.splitTextToSize(businessProfile.receiptFooter, maxWidth);
+                    doc.text(footerLines, doc.internal.pageSize.getWidth() / 2, y + 5, { align: 'center' });
+                    y += (footerLines.length * lineHeight) + 5;
+                }
+
+                doc.save(`Kaspocket_Receipt_${receiptTransactionIdSpan.textContent}.pdf`);
+                showMessage('transactionSuccess', 'pdfGeneratedSuccessfully');
+            } catch (error) {
+                console.error("Error generating PDF:", error);
+                showMessage('error', 'failedToGeneratePdf');
+            }
+        }
+
+        /**
+         * Shares the generated receipt PDF using Web Share API.
+         */
+        async function shareReceiptPdf() {
+            if (navigator.share) {
+                try {
+                    const doc = new jsPDF();
+                    // Re-generate content for sharing (similar to PDF generation)
+                    let y = 10;
+                    const margin = 10;
+                    const lineHeight = 7;
+                    const maxWidth = 190;
+
+                    doc.setFontSize(16);
+                    doc.text(businessProfile.businessName || translations[currentLanguage].businessNamePlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                    y += lineHeight;
+                    doc.setFontSize(10);
+                    doc.text(businessProfile.address || translations[currentLanguage].addressPlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                    y += lineHeight;
+                    doc.text(businessProfile.phoneNumber || translations[currentLanguage].phoneNumberPlaceholder, doc.internal.pageSize.getWidth() / 2, y, { align: 'center' });
+                    y += lineHeight;
+                    if (businessProfile.receiptHeader) {
+                        const headerLines = doc.splitTextToSize(businessProfile.receiptHeader, maxWidth);
+                        doc.text(headerLines, doc.internal.pageSize.getWidth() / 2, y + 2, { align: 'center' });
+                        y += (headerLines.length * lineHeight) + 2;
+                    }
+                    y += 5;
+                    doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y);
+                    y += 5;
+                    doc.setFontSize(10);
+                    doc.text(`${translations[currentLanguage].dateLabel} ${receiptDateSpan.textContent}`, margin, y);
+                    y += lineHeight;
+                    doc.text(`${translations[currentLanguage].transactionIdLabel} ${receiptTransactionIdSpan.textContent}`, margin, y);
+                    y += lineHeight;
+                    doc.text(`${translations[currentLanguage].paymentMethodLabel} ${receiptPaymentMethodSpan.textContent}`, margin, y);
+                    y += 5;
+                    doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y);
+                    y += 5;
+                    const receiptItemsHtml = receiptItemsDiv.querySelectorAll('div');
+                     receiptItemsHtml.forEach(itemDiv => {
+                        if (!itemDiv.querySelector('span:first-child').textContent.includes('Subtotal')) {
+                            const name = itemDiv.querySelector('span:first-child').textContent;
+                            const price = itemDiv.querySelector('span:last-child').textContent;
+                            doc.text(name, margin, y);
+                            doc.text(price, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+                            y += lineHeight;
+                        }
+                    });
+                    y += 5;
+                    doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y);
+                    y += 5;
+                    doc.setFontSize(14);
+                    doc.text(`${translations[currentLanguage].totalLabel} ${receiptTotalSpan.textContent}`, doc.internal.pageSize.getWidth() - margin, y, { align: 'right' });
+                    y += lineHeight;
+                    if (businessProfile.receiptFooter) {
+                        const footerLines = doc.splitTextToSize(businessProfile.receiptFooter, maxWidth);
+                        doc.text(footerLines, doc.internal.pageSize.getWidth() / 2, y + 5, { align: 'center' });
+                        y += (footerLines.length * lineHeight) + 5;
+                    }
+
+                    const pdfBlob = doc.output('blob');
+                    const file = new File([pdfBlob], `Kaspocket_Receipt_${receiptTransactionIdSpan.textContent}.pdf`, { type: 'application/pdf' });
+
+                    await navigator.share({
+                        files: [file],
+                        title: translations[currentLanguage].receiptTitle,
+                        text: `${translations[currentLanguage].transactionIdLabel} ${receiptTransactionIdSpan.textContent}`,
+                    });
+                    showMessage('transactionSuccess', 'pdfGeneratedSuccessfully'); // Assuming share implies success
+                } catch (error) {
+                    console.error('Error sharing PDF:', error);
+                    if (error.name !== 'AbortError') { // User cancelled share
+                        showMessage('error', 'failedToGeneratePdf'); // Generic error for sharing failure
+                    }
+                }
+            } else {
+                showMessage('error', 'webShareApiNotSupported');
+            }
+        }
+
+        /**
+         * Sends ESC/POS commands to a local printer bridge application.
+         * @param {object} transactionData - The transaction data to print.
+         */
+        async function printReceiptViaBridge(transactionData) {
+            showLoading(); // Show loading while trying to print
+            try {
+                const encoder = new EscPosEncoder();
+                const now = new Date();
+                const formattedDate = now.toLocaleDateString(currentLanguage === 'id' ? 'id-ID' : 'en-US');
+                const formattedTime = now.toLocaleTimeString(currentLanguage === 'id' ? 'id-ID' : 'en-US');
+
+                // Initialize printer
+                encoder.initialize();
+
+                // Header Struk
+                encoder.align('center').text(businessProfile.businessName || translations[currentLanguage].businessNamePlaceholder).end();
+                encoder.align('center').text(businessProfile.address || translations[currentLanguage].addressPlaceholder).end();
+                encoder.align('center').text(businessProfile.phoneNumber || translations[currentLanguage].phoneNumberPlaceholder).end();
+                encoder.align('center').text('-----------------------------').end();
+
+                if (businessProfile.receiptHeader) {
+                    encoder.align('center').text(businessProfile.receiptHeader).end();
+                    encoder.align('center').text('-----------------------------').end();
+                }
+
+                // Detail Transaksi
+                encoder.align('left').text(`${translations[currentLanguage].dateLabel} ${formattedDate}`).end();
+                encoder.align('left').text(`Waktu: ${formattedTime}`).end();
+                encoder.align('left').text(`${translations[currentLanguage].transactionIdLabel} ${transactionData.id}`).end();
+                encoder.align('left').text(`${translations[currentLanguage].paymentMethodLabel} ${transactionData.appliedPaymentMethod}`).end();
+                encoder.text('-----------------------------').end();
+
+                // Item-item Produk
+                encoder.text('Produk           Qty   Harga     Total').end();
+                transactionData.items.forEach(item => {
+                    const itemName = item.name.padEnd(15).substring(0, 15); // Pad atau potong nama
+                    const qty = item.quantity.toString().padStart(3);
+                    const price = formatCurrency(item.price).replace('Rp', '').trim().padStart(9); // Format harga tanpa Rp
+                    const total = formatCurrency(item.price * item.quantity).replace('Rp', '').trim().padStart(9);
+                    encoder.text(`${itemName} ${qty} ${price} ${total}`).end();
+                });
+                encoder.text('-----------------------------').end();
+
+                // Subtotal, Pajak, Diskon, Total
+                encoder.align('right').text(`Subtotal: ${formatCurrency(transactionData.subtotalAmount)}`).end();
+                if (transactionData.appliedTaxRate > 0) {
+                    const taxAmount = transactionData.subtotalAmount * (transactionData.appliedTaxRate / 100);
+                    encoder.align('right').text(`${translations[currentLanguage].taxLabel} (${transactionData.appliedTaxRate}%): ${formatCurrency(taxAmount)}`).end();
+                }
+                if (transactionData.appliedDiscountRate > 0) {
+                    const discountAmount = transactionData.subtotalAmount * (transactionData.appliedDiscountRate / 100);
+                    encoder.align('right').text(`${translations[currentLanguage].discountLabel} (${transactionData.appliedDiscountRate}%): -${formatCurrency(discountAmount)}`).end();
+                }
+                encoder.align('right').text(`${translations[currentLanguage].totalLabel} ${formatCurrency(transactionData.totalAmount)}`).end();
+                encoder.text('-----------------------------').end();
+
+                if (businessProfile.receiptFooter) {
+                    encoder.align('center').text(businessProfile.receiptFooter).end();
+                    encoder.align('center').text('-----------------------------').end();
+                }
+
+                encoder.align('center').text('Terima Kasih!').end();
+                encoder.feed(3); // Garis kosong
+                encoder.cut();   // Perintah potong kertas
+
+                const commands = encoder.encode(); // Mengembalikan Uint8Array dari perintah ESC/POS
+                const commandsBase64 = btoa(String.fromCharCode.apply(null, commands)); // Ubah ke Base64
+
+                // Kirim data ke aplikasi jembatan lokal
+                const response = await fetch('http://localhost:8000/print', { // PORT 8000 adalah contoh
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ printData: commandsBase64 }) // Kirim dalam Base64
+                });
+
+                if (response.ok) {
+                    console.log('Perintah cetak berhasil dikirim.');
+                    showMessage('transactionSuccess', 'printReceiptButton', ['Struk berhasil dicetak!']); // Reusing printReceiptButton key for success message
+                } else {
+                    const errorText = await response.text();
+                    console.error('Gagal mencetak struk:', response.status, errorText);
+                    showMessage('error', 'failedToPrintReceipt');
+                }
+            } catch (error) {
+                console.error('Error saat mengirim perintah cetak:', error);
+                showMessage('error', 'failedToPrintReceipt');
+            } finally {
+                hideLoading();
+            }
+        }
+
+
+        // --- Transaction History Logic ---
+
+        /**
+         * Renders the list of transactions.
+         * @param {Array} transactionsToRender - Array of transaction objects.
+         */
+        function renderTransactionHistory(transactionsToRender) {
+            transactionListDiv.innerHTML = '';
+            if (transactionsToRender.length === 0) {
+                noTransactionsMessage.classList.remove('hidden');
+                noTransactionsMessage.textContent = translations[currentLanguage].noTransactionsMessage;
+                return;
+            } else {
+                noTransactionsMessage.classList.add('hidden');
+            }
+
+            transactionsToRender.sort((a, b) => {
+                // FIX: Add a check for timestamp existence before calling toDate()
+                const dateA = a.timestamp ? a.timestamp.toDate() : new Date(0); // Default to epoch if timestamp is null
+                const dateB = b.timestamp ? b.timestamp.toDate() : new Date(0); // Default to epoch if timestamp is null
+                return dateB - dateA;
+            });
+
+            transactionsToRender.forEach(transaction => {
+                const transactionCard = document.createElement('div');
+                transactionCard.className = 'bg-white p-4 rounded-lg shadow-sm flex flex-col border border-gray-200';
+                const transactionDate = transaction.timestamp ? transaction.timestamp.toDate().toLocaleString() : 'N/A';
+                const totalAmount = formatCurrency(transaction.totalAmount);
+                const paymentMethod = transaction.appliedPaymentMethod || 'N/A';
+
+                let itemsHtml = `<ul class="list-disc list-inside text-sm text-gray-700 mt-2">`;
+                transaction.items.forEach(item => {
+                    itemsHtml += `<li>${item.name} (${item.quantity}x) - ${formatCurrency(item.price * item.quantity)}</li>`;
+                });
+                itemsHtml += `</ul>`;
+
+                transactionCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-md font-semibold text-gray-800">${translations[currentLanguage].transactionIdLabel}: ${transaction.id.substring(0, 8)}...</h4>
+                        <span class="text-sm text-gray-600">${transactionDate}</span>
+                    </div>
+                    <p class="text-lg font-bold text-blue-600 mb-2">${translations[currentLanguage].totalLabel} ${totalAmount}</p>
+                    <p class="text-sm text-gray-600 mb-2">${paymentMethod}</p>
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button class="view-details-btn bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm transition-colors" data-id="${transaction.id}">
+                            ${translations[currentLanguage].viewDetailsButton || 'View Details'}
+                        </button>
+                        <button class="view-receipt-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm transition-colors" data-id="${transaction.id}">
+                            ${translations[currentLanguage].viewReceiptButton || 'Receipt'}
+                        </button>
+                    </div>
+                    <div id="details-${transaction.id}" class="hidden mt-3 p-2 bg-gray-50 rounded-md border border-gray-100">
+                        ${itemsHtml}
+                    </div>
+                `;
+                transactionListDiv.appendChild(transactionCard);
+            });
+
+            document.querySelectorAll('.view-details-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const transactionId = event.target.dataset.id;
+                    const detailsDiv = document.getElementById(`details-${transactionId}`);
+                    detailsDiv.classList.toggle('hidden');
+                    if (detailsDiv.classList.contains('hidden')) {
+                        event.target.textContent = translations[currentLanguage].viewDetailsButton || 'View Details';
+                    } else {
+                        event.target.textContent = translations[currentLanguage].hideDetailsButton || 'Hide Details';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.view-receipt-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const transactionId = event.target.dataset.id;
+                    const transactionToView = transactions.find(t => t.id === transactionId);
+                    if (transactionToView) {
+                        showReceipt(transactionToView);
+                    }
+                });
+            });
+        }
+
+        // --- Reports Logic ---
+
+        /**
+         * Renders the report data based on the selected period.
+         */
+        function renderReports() {
+            if (!transactions.length) {
+                salesTrendAmount.textContent = formatCurrency(0);
+                totalSalesAmount.textContent = formatCurrency(0);
+                avgTransactionAmount.textContent = formatCurrency(0);
+                bestSellingProduct.textContent = 'N/A';
+                salesTrendChange.textContent = '';
+                totalSalesChange.textContent = '';
+                avgTransactionChange.textContent = '';
+                bestSellingProductChange.textContent = '';
+                return;
+            }
+
+            const selectedPeriod = document.querySelector('input[name="reportPeriod"]:checked').value;
+            let filteredTransactions = [];
+            const now = new Date();
+
+            if (selectedPeriod === 'daily') {
+                salesTrendPeriod.textContent = translations[currentLanguage].dailyReport;
+                // Filter for the last 7 days for daily report
+                const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6); // Include today
+                filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= sevenDaysAgo); // FIX: Add null check for timestamp
+            } else if (selectedPeriod === 'weekly') {
+                salesTrendPeriod.textContent = translations[currentLanguage].weeklyReport;
+                // Filter for the last 4 weeks for weekly report
+                const fourWeeksAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 28);
+                filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= fourWeeksAgo); // FIX: Add null check for timestamp
+            } else if (selectedPeriod === 'monthly') {
+                salesTrendPeriod.textContent = translations[currentLanguage].last30Days;
+                // Filter for the last 6 months for monthly report
+                const sixMonthsAgo = new Date();
+                sixMonthsAgo.setMonth(now.getMonth() - 5); // Include current month
+                sixMonthsAgo.setDate(1); // Start from the beginning of the month
+                filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= sixMonthsAgo); // FIX: Add null check for timestamp
+            }
+
+            const currentTotalSales = filteredTransactions.reduce((sum, t) => sum + t.totalAmount, 0);
+            salesTrendAmount.textContent = formatCurrency(currentTotalSales);
+            totalSalesAmount.textContent = formatCurrency(currentTotalSales);
+
+            const averageTransaction = filteredTransactions.length > 0 ? currentTotalSales / filteredTransactions.length : 0;
+            avgTransactionAmount.textContent = formatCurrency(averageTransaction);
+
+            const productSales = {};
+            filteredTransactions.forEach(t => {
+                t.items.forEach(item => {
+                    productSales[item.name] = (productSales[item.name] || 0) + item.quantity;
+                });
+            });
+
+            let topProduct = 'N/A';
+            let maxQuantity = 0;
+            for (const productName in productSales) {
+                if (productSales[productName] > maxQuantity) {
+                    maxQuantity = productSales[productName];
+                    topProduct = productName;
+                }
+            }
+            bestSellingProduct.textContent = topProduct;
+
+            salesTrendChange.textContent = '';
+            totalSalesChange.textContent = '';
+            avgTransactionChange.textContent = '';
+            bestSellingProductChange.textContent = '';
+
+            // Removed Chart.js graph rendering logic
+        }
+
+        // --- Settings Logic ---
+
+        /**
+         * Renders the business profile settings by populating input fields.
+         */
+        function renderBusinessProfile() {
+            businessNameInput.value = businessProfile.businessName || '';
+            businessAddressInput.value = businessProfile.address || '';
+            phoneNumberInput.value = businessProfile.phoneNumber || '';
+
+            currentTaxRateDisplay.textContent = `${businessProfile.taxRate || 0}%`;
+            currentLanguageDisplay.textContent = businessProfile.language === 'id' ? translations[currentLanguage].indonesianLanguage : translations[currentLanguage].englishLanguage;
+
+            // Update receipt design input fields
+            receiptHeaderInput.value = businessProfile.receiptHeader || '';
+            receiptFooterInput.value = businessProfile.receiptFooter || '';
+        }
+
+        /**
+         * Handles saving the business profile settings to Firestore.
+         * @param {Event} event - The form submission event.
+         */
+        async function handleSaveBusinessProfile(event) {
+            event.preventDefault();
+            showLoading();
+
+            const newBusinessName = businessNameInput.value.trim();
+            const newBusinessAddress = businessAddressInput.value.trim();
+            const newPhoneNumber = phoneNumberInput.value.trim();
+
+            if (!newBusinessName || !newBusinessAddress || !newPhoneNumber) {
+                showMessage('error', 'fillAllBusinessProfileFields');
+                hideLoading();
+                return;
+            }
+
+            try {
+                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                await setDoc(settingsDocRef, {
+                    businessName: newBusinessName,
+                    address: newBusinessAddress,
+                    phoneNumber: newPhoneNumber
+                }, { merge: true });
+
+                showMessage('transactionSuccess', 'businessProfileSavedSuccessfully');
+            } catch (error) {
+                console.error("Error saving business profile:", error);
+                showMessage('error', 'errorSavingBusinessProfile');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles saving the tax rate to Firestore.
+         * @param {Event} event - The form submission event.
+         */
+        async function handleSaveTaxRate(event) {
+            event.preventDefault();
+            showLoading();
+
+            const newTaxRate = parseFloat(taxRateInput.value);
+            if (isNaN(newTaxRate) || newTaxRate < 0 || newTaxRate > 100) {
+                showMessage('error', 'enterValidTaxRate');
+                hideLoading();
+                return;
+            }
+
+            try {
+                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                await setDoc(settingsDocRef, {
+                    taxRate: newTaxRate
+                }, { merge: true });
+                showMessage('transactionSuccess', 'taxRateSavedSuccessfully');
+                taxModal.classList.add('hidden');
+            } catch (error) {
+                console.error("Error saving tax rate:", error);
+                showMessage('error', 'failedToSaveTaxRate');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles saving receipt design (header/footer) to Firestore.
+         */
+        async function handleSaveReceiptDesign() {
+            showLoading();
+            const newReceiptHeader = receiptHeaderInput.value.trim();
+            const newReceiptFooter = receiptFooterInput.value.trim();
+
+            try {
+                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                await setDoc(settingsDocRef, {
+                    receiptHeader: newReceiptHeader,
+                    receiptFooter: newReceiptFooter
+                }, { merge: true });
+                showMessage('transactionSuccess', 'receiptDesignSavedSuccessfully');
+                printerSettingsModal.classList.add('hidden');
+            } catch (error) {
+                console.error("Error saving receipt design:", error);
+                showMessage('error', 'failedToSaveReceiptDesign');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * Handles saving language settings.
+         */
+        async function handleSaveLanguage() {
+            showLoading();
+            const selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+            try {
+                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                await setDoc(settingsDocRef, {
+                    language: selectedLanguage
+                }, { merge: true });
+                showMessage('transactionSuccess', 'languageSavedSuccessfully', [selectedLanguage === 'id' ? 'Indonesia' : 'English']);
+                languageSettingsModal.classList.add('hidden');
+                setLanguage(selectedLanguage); // Immediately apply language change
+            } catch (error) {
+                console.error("Error saving language:", error);
+                showMessage('error', 'failedToSaveLanguageSettings');
+            } finally {
+                hideLoading();
+            }
+        }
+
+
+        /**
+         * Sets up a real-time listener for business profile settings.
+         */
+        function setupSettingsListener() {
+            if (!currentUserId) {
+                console.log("Settings Listener: currentUserId is null. Skipping setup.");
+                return;
+            }
+            console.log("Setting up settings listener for user:", currentUserId);
+
+            const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+            onSnapshot(settingsDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    businessProfile = docSnapshot.data();
+                    console.log("Settings data received:", businessProfile);
+                    // Ensure default values if not present
+                    businessProfile.language = businessProfile.language || 'id';
+                    businessProfile.receiptHeader = businessProfile.receiptHeader || '';
+                    businessProfile.receiptFooter = businessProfile.receiptFooter || '';
+                    businessProfile.taxRate = businessProfile.taxRate || 0; // Ensure taxRate is initialized
+                } else {
+                    console.log("No existing business profile found. Setting default.");
+                    businessProfile = {
+                        businessName: "My Business",
+                        address: "Jl. Contoh No. 123",
+                        phoneNumber: "081234567890",
+                        paymentMethod: "Tunai",
+                        taxRate: 0,
+                        language: "id",
+                        receiptHeader: "",
+                        receiptFooter: ""
+                    };
+                    setDoc(settingsDocRef, businessProfile).catch(error => console.error("Error setting default profile:", error));
+                }
+                currentLanguage = businessProfile.language; // Update global language variable
+                applyTranslations(); // Apply translations immediately
+                renderBusinessProfile();
+                renderCart(); // Re-render cart to apply new tax rate if changed
+            }, (error) => {
+                console.error("Error fetching settings:", error);
+                showMessage('error', 'failedToLoadSettings');
+            });
+        }
+
+
+        // --- Firestore Listeners (Real-time updates) ---
+
+        /**
+         * Sets up a real-time listener for products.
+         */
+        function setupProductListener() {
+            if (!currentUserId) {
+                console.log("Product Listener: currentUserId is null. Skipping setup.");
+                return;
+            }
+            console.log("Setting up product listener for user:", currentUserId);
+
+            const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+            onSnapshot(productsCollectionRef, (snapshot) => {
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Products data received:", products);
+                renderProducts();
+                renderAvailableProducts(productSearchInput.value);
+            }, (error) => {
+                console.error("Error fetching products:", error);
+                showMessage('error', 'failedToLoadProducts');
+            });
+        }
+
+        /**
+         * Sets up a real-time listener for transactions.
+         */
+        function setupTransactionListener() {
+            if (!currentUserId) {
+                console.log("Transaction Listener: currentUserId is null. Skipping setup.");
+                return;
+            }
+            console.log("Setting up transaction listener for user:", currentUserId);
+
+            const transactionsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "transactions");
+            onSnapshot(transactionsCollectionRef, (snapshot) => {
+                transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Transactions data received:", transactions);
+                renderTransactionHistory(transactions);
+                renderReports();
+            }, (error) => {
+                console.error("Error fetching transactions:", error);
+                showMessage('error', 'failedToLoadTransactionHistory');
+            });
+        }
+
+        // --- Gemini API Integration for Report Analysis ---
+
+        /**
+         * Calls the Gemini API to analyze the provided report data.
+         * @param {object} reportData - Object containing sales trend, total sales, avg transaction, best selling product.
+         * @param {Array} recentTransactions - Array of recent transaction summaries.
+         */
+        async function analyzeReportWithLLM(reportData, recentTransactions) {
+            aiAnalysisOutputDiv.classList.remove('hidden');
+            aiAnalysisLoading.classList.remove('hidden');
+            aiAnalysisResult.textContent = ''; // Clear previous output
+            analyzeReportButton.disabled = true;
+
+            const prompt = `
+                Sebagai seorang analis bisnis, berikan ringkasan kinerja penjualan berdasarkan data berikut. Fokus pada tren, kekuatan, dan area yang perlu ditingkatkan.
+
+                Data Laporan:
+                - Tren Penjualan: ${reportData.salesTrendAmount}
+                - Total Penjualan: ${reportData.totalSalesAmount}
+                - Rata-rata Transaksi: ${reportData.avgTransactionAmount}
+                - Produk Terlaris: ${reportData.bestSellingProduct}
+
+                Beberapa transaksi terbaru (untuk konteks, jika tersedia):
+                ${recentTransactions.length > 0 ? recentTransactions.map(t => `- ID: ${t.id.substring(0, 8)}, Total: ${formatCurrency(t.totalAmount)}, Items: ${t.items.map(item => `${item.name} (${item.quantity}x)`).join(', ')}`).join('\n') : 'Tidak ada transaksi terbaru yang tersedia.'}
+
+                Berikan analisis yang ringkas dan mudah dipahami, tidak lebih dari 200 kata.
+            `;
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                console.log("LLM Report Analysis Response:", result);
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    aiAnalysisResult.textContent = text;
+                    showMessage('transactionSuccess', 'reportAnalysisSuccess');
+                } else {
+                    console.error("LLM report analysis response structure unexpected:", result);
+                    aiAnalysisResult.textContent = translations[currentLanguage].reportAnalysisFailed;
+                    showMessage('error', 'reportAnalysisFailed');
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API for report analysis:", error);
+                aiAnalysisResult.textContent = translations[currentLanguage].reportAnalysisFailed;
+                showMessage('error', 'reportAnalysisFailed');
+            } finally {
+                aiAnalysisLoading.classList.add('hidden');
+                analyzeReportButton.disabled = false;
+            }
+        }
+
+
+        // --- Event Listeners ---
+
+        window.onload = function() {
+            modalCloseButton.addEventListener('click', hideMessage);
+            closeReceiptModalButton.addEventListener('click', () => receiptModal.classList.add('hidden'));
+
+            // Auth Page Navigation
+            signUpLink.addEventListener('click', () => showPage(registerPage));
+            signInLink.addEventListener('click', () => showPage(loginPage));
+            forgotPasswordLink.addEventListener('click', handleForgotPassword);
+
+            // Auth Actions
+            signInButton.addEventListener('click', handleSignIn);
+            signUpButton.addEventListener('click', handleSignUp);
+            logoutButton.addEventListener('click', handleLogout);
+
+            // Dashboard Navigation
+            goToCashierButton.addEventListener('click', () => {
+                showPage(cashierPage);
+                renderAvailableProducts(productSearchInput.value);
+                renderCart();
+            });
+            goToProductManagementButton.addEventListener('click', () => {
+                showPage(productManagementPage);
+            });
+            goToTransactionHistoryButton.addEventListener('click', () => {
+                showPage(transactionHistoryPage);
+            });
+            goToReportsButton.addEventListener('click', () => {
+                showPage(reportPage);
+                renderReports();
+                aiAnalysisOutputDiv.classList.add('hidden'); // Hide AI analysis on page load
+                aiAnalysisResult.textContent = ''; // Clear previous results
+            });
+            goToSettingsButton.addEventListener('click', () => {
+                showPage(settingsPage);
+                renderBusinessProfile();
+            });
+            goToSettingsFromCashier.addEventListener('click', () => {
+                showPage(settingsPage);
+                renderBusinessProfile();
+            });
+
+            // Back buttons
+            backToDashboardFromProducts.addEventListener('click', () => showPage(dashboardPage));
+            backToDashboardFromCashier.addEventListener('click', () => showPage(dashboardPage));
+            backToDashboardFromTransactions.addEventListener('click', () => showPage(dashboardPage));
+            backToDashboardFromReports.addEventListener('click', () => showPage(dashboardPage));
+            backToDashboardFromSettings.addEventListener('click', () => showPage(dashboardPage));
+
+            // Product Management Form
+            productForm.addEventListener('submit', handleProductFormSubmit);
+            cancelEditButton.addEventListener('click', () => {
+                productForm.reset();
+                productIdInput.value = '';
+                productFormTitle.textContent = translations[currentLanguage].addNewProduct;
+                saveProductButton.textContent = translations[currentLanguage].addProductButton;
+                cancelEditButton.classList.add('hidden');
+                productImagePreview.classList.add('hidden');
+                productImagePreview.src = '';
+            });
+            productImageInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        productImagePreview.src = e.target.result;
+                        productImagePreview.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    productImagePreview.classList.add('hidden');
+                    productImagePreview.src = '';
+                }
+            });
+
+
+            // Cashier Functionality
+            productSearchInput.addEventListener('input', (event) => renderAvailableProducts(event.target.value));
+            processTransactionButton.addEventListener('click', processTransaction);
+            // Removed taxInput.addEventListener('input', renderCart);
+            discountInput.addEventListener('input', renderCart);
+            paymentMethodSelect.addEventListener('change', renderCart);
+
+
+            // Report Period Selection
+            document.querySelectorAll('input[name="reportPeriod"]').forEach(radio => {
+                radio.addEventListener('change', renderReports);
+            });
+
+            // AI Report Analysis Button
+            analyzeReportButton.addEventListener('click', () => {
+                const selectedPeriod = document.querySelector('input[name="reportPeriod"]:checked').value;
+                let filteredTransactions = [];
+                const now = new Date();
+
+                if (selectedPeriod === 'daily') {
+                    const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+                    filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= sevenDaysAgo);
+                } else if (selectedPeriod === 'weekly') {
+                    const fourWeeksAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 28);
+                    filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= fourWeeksAgo);
+                } else if (selectedPeriod === 'monthly') {
+                    const sixMonthsAgo = new Date();
+                    sixMonthsAgo.setMonth(now.getMonth() - 5);
+                    sixMonthsAgo.setDate(1);
+                    filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= sixMonthsAgo);
+                }
+
+                const currentTotalSales = filteredTransactions.reduce((sum, t) => sum + t.totalAmount, 0);
+                const averageTransaction = filteredTransactions.length > 0 ? currentTotalSales / filteredTransactions.length : 0;
+                const productSales = {};
+                filteredTransactions.forEach(t => {
+                    t.items.forEach(item => {
+                        productSales[item.name] = (productSales[item.name] || 0) + item.quantity;
+                    });
+                });
+                let topProduct = 'N/A';
+                let maxQuantity = 0;
+                for (const productName in productSales) {
+                    if (productSales[productName] > maxQuantity) {
+                        maxQuantity = productSales[productName];
+                        topProduct = productName;
+                    }
+                }
+
+                const reportDataForLLM = {
+                    salesTrendAmount: salesTrendAmount.textContent, // Use the already formatted value
+                    totalSalesAmount: formatCurrency(currentTotalSales),
+                    avgTransactionAmount: formatCurrency(averageTransaction),
+                    bestSellingProduct: topProduct
+                };
+
+                // Get some recent transactions for context
+                const recentTransactionsForLLM = filteredTransactions.slice(0, 5); // Take top 5 recent transactions
+
+                analyzeReportWithLLM(reportDataForLLM, recentTransactionsForLLM);
+            });
+
+
+            // Settings Business Profile Form
+            businessProfileForm.addEventListener('submit', handleSaveBusinessProfile);
+
+            taxSetting.addEventListener('click', () => {
+                taxRateInput.value = businessProfile.taxRate || 0;
+                taxModal.classList.remove('hidden');
+            });
+            closeTaxModalButton.addEventListener('click', () => taxModal.classList.add('hidden'));
+            taxForm.addEventListener('submit', handleSaveTaxRate);
+
+            // Receipt Design Settings
+            receiptPrinterSetting.addEventListener('click', () => {
+                printerSettingsModal.classList.remove('hidden');
+                // Populate current header/footer for editing
+                receiptHeaderInput.value = businessProfile.receiptHeader || '';
+                receiptFooterInput.value = businessProfile.receiptFooter || '';
+            });
+            closePrinterSettingsModalButton.addEventListener('click', () => printerSettingsModal.classList.add('hidden'));
+            saveReceiptDesignButton.addEventListener('click', handleSaveReceiptDesign);
+
+            // Language Settings
+            languageSetting.addEventListener('click', () => {
+                languageSettingsModal.classList.remove('hidden');
+                const currentLangRadio = document.querySelector(`input[name="language"][value="${currentLanguage}"]`);
+                if (currentLangRadio) {
+                    currentLangRadio.checked = true;
+                }
+            });
+            closeLanguageSettingsModalButton.addEventListener('click', () => languageSettingsModal.classList.add('hidden'));
+            saveLanguageButton.addEventListener('click', handleSaveLanguage);
+
+
+            // Handle PDF generation and share buttons
+            generatePdfButton.addEventListener('click', generateReceiptPdf);
+            shareReceiptButton.addEventListener('click', shareReceiptPdf);
+            printReceiptButton.addEventListener('click', () => {
+                if (receiptModal.currentTransactionData) {
+                    printReceiptViaBridge(receiptModal.currentTransactionData);
+                } else {
+                    showMessage('error', 'failedToPrintReceipt', ['Tidak ada data transaksi untuk dicetak.']);
+                }
+            });
+
+
+            // --- Firebase Auth State Change Listener ---
+            onAuthStateChanged(auth, async (user) => {
+                console.log("Auth state changed. User:", user ? user.uid : "null");
+                if (user) {
+                    currentUserId = user.uid;
+                    currentUserIdDisplay.textContent = user.email || user.uid;
+                    showPage(dashboardPage);
+                    // Setup listeners only when user is authenticated
+                    setupProductListener();
+                    setupTransactionListener();
+                    setupSettingsListener(); // This will also set the initial language
+                } else {
+                    currentUserId = null;
+                    showPage(loginPage); // Show login page if no user is authenticated
+                    // Clear local state when user logs out or is not authenticated
+                    // This does NOT delete data from Firebase, only clears the UI
+                    products = [];
+                    cart = [];
+                    transactions = [];
+                    businessProfile = {};
+                    currentLanguage = 'id'; // Reset to default language on logout
+                    applyTranslations(); // Apply default language
+                    renderProducts();
+                    renderAvailableProducts();
+                    renderCart();
+                    renderTransactionHistory([]);
+                    renderReports();
+                    renderBusinessProfile();
+                }
+                hideLoading(); // Hide loading only after auth state is determined
+            });
+
+            // Initial Firebase Authentication check
+            showLoading(); // Show loading when the app starts
+        };
+    </script>
+</body>
+</html>

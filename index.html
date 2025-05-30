@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaspocket</title>
+    <title>Kaspocket - Mobile Cashier App</title>
+    <meta name="description" content="Kaspocket adalah aplikasi kasir mobile yang intuitif dan mudah digunakan untuk mengelola produk, transaksi, dan laporan bisnis Anda.">
+    <meta name="keywords" content="kasir, mobile, POS, point of sale, aplikasi kasir, manajemen produk, riwayat transaksi, laporan penjualan, bisnis, UMKM, toko, Kaspocket">
+    <link rel="canonical" href="https://kaspocket-mobile.vercel.app/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kaspocket-mobile.vercel.app/">
+    <meta property="og:title" content="Kaspocket - Aplikasi Kasir Mobile Anda">
+    <meta property="og:description" content="Kelola bisnis Anda dengan mudah menggunakan Kaspocket: Aplikasi kasir mobile yang intuitif untuk produk, transaksi, dan laporan.">
+    <meta property="og:image" content="https://placehold.co/1200x630/0c7ff2/ffffff?text=Kaspocket+Mobile+Cashier">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://kaspocket-mobile.vercel.app/">
+    <meta property="twitter:title" content="Kaspocket - Aplikasi Kasir Mobile Anda">
+    <meta property="twitter:description" content="Kelola bisnis Anda dengan mudah menggunakan Kaspocket: Aplikasi kasir mobile yang intuitif untuk produk, transaksi, dan laporan.">
+    <meta property="twitter:image" content="https://placehold.co/1200x630/0c7ff2/ffffff?text=Kaspocket+Mobile+Cashier">
+
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
     <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
         href="https://fonts.googleapis.com/css2?display=swap&amp;family=Manrope%3Awght%40400%3B500%3B700%3B800&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900">
@@ -802,7 +818,8 @@
                 failedToSavePrinterSettings: "Gagal menyimpan pengaturan printer.", // New
                 invalidPaperWidth: "Lebar kertas harus angka antara 10 dan 100.", // New
                 imageUploadFailed: "Gagal mengunggah gambar. Pastikan format file benar dan ukurannya tidak terlalu besar.", // New translation for image upload error
-                imageTooLarge: "Ukuran gambar terlalu besar. Ukuran maksimal adalah {0} MB." // New translation for image too large
+                imageTooLarge: "Ukuran gambar terlalu besar. Ukuran maksimal adalah {0} MB.", // New translation for image too large
+                webShareApiPermissionDenied: "Izin ditolak atau Web Share API tidak didukung di lingkungan ini." // New translation for share error
             },
             en: {
                 appTitle: "Kaspocket",
@@ -921,58 +938,9 @@
                 productAddedSuccessfully: "Product added successfully!",
                 failedToSaveProduct: "Failed to save product.",
                 enterValidProductDetails: "Please enter valid product name, positive price, and non-negative stock.",
-                failedToUploadImage: "Failed to upload image.",
-                printingReceipt: "Printing receipt...",
-                pdfGeneratedSuccessfully: "PDF generated successfully!",
-                failedToGeneratePdf: "Failed to generate PDF.",
-                webShareApiNotSupported: "Web Share API is not supported in this browser.",
-                receiptDesignSavedSuccessfully: "Receipt design saved successfully!",
-                failedToSaveReceiptDesign: "Failed to save receipt design.",
-                failedToSignIn: "Failed to sign in. Please check your credentials.",
-                userNotFound: "No user found with this email.",
-                incorrectPassword: "Incorrect password.",
-                invalidEmailFormat: "Invalid email format.",
-                enterEmailAndPassword: "Please enter email and password.",
-                accountCreatedSuccessfully: "Account created successfully! You are now signed in.",
-                failedToCreateAccount: "Failed to create account.",
-                emailAlreadyInUse: "This email is already in use.",
-                passwordTooWeak: "Password is too weak.",
-                failedToLogout: "Failed to log out.",
-                enterEmailForReset: "Please enter your email in the login field to reset your password.",
-                passwordResetLinkSent: "Password reset link has been sent to your email address.",
-                passwordResetFailed: "Password Reset Failed",
-                failedToSendResetEmail: "Failed to send password reset email.",
-                fillAllFields: "Please fill in all fields.",
-                passwordMinLength: "Password must be at least 6 characters.",
-                passwordsDoNotMatch: "Passwords do not match.",
-                errorSavingBusinessProfile: "Failed to save business profile.",
-                fillAllBusinessProfileFields: "Please fill in all business profile fields.",
-                businessProfileSavedSuccessfully: "Business profile saved successfully!",
-                languageSavedSuccessfully: "Language saved successfully!",
-                failedToSaveLanguageSettings: "Failed to save language settings.",
-                failedToLoadSettings: "Failed to load settings.",
-                failedToLoadProducts: "Failed to load products.",
-                failedToLoadTransactionHistory: "Failed to load transaction history.",
-                viewDetailsButton: "View Details",
-                hideDetailsButton: "Hide Details",
-                viewReceiptButton: "Receipt",
-                failedToPrintReceipt: "Failed to print receipt. Ensure the printer bridge application is running and connected.",
-                printerSettingsTitle: "Pengaturan Printer", // New
-                printerAddressLabel: "Alamat IP/Nama Printer", // New
-                printerAddressPlaceholder: "misal., 192.168.1.100", // New
-                printerTypeLabel: "Jenis Printer", // New
-                thermalPrinter: "Thermal", // New
-                dotMatrixPrinter: "Dot Matrix", // New
-                laserPrinter: "Laser", // New
-                printerTypeDisclaimer: "Note: ESC/POS printing features primarily support thermal printers.", // New
-                paperWidthLabel: "Lebar Kertas (Karakter per Baris)", // New
-                paperWidthPlaceholder: "e.g., 42 for 58mm, 56 for 80mm", // New
-                autoPrintLabel: "Auto Print After Transaction", // New
-                printerSettingsSavedSuccessfully: "Printer settings saved successfully!", // New
-                failedToSavePrinterSettings: "Failed to save printer settings.", // New
-                invalidPaperWidth: "Paper width must be a number between 10 and 100.", // New
-                imageUploadFailed: "Failed to upload image. Please ensure correct file format and reasonable size.", // New translation for image upload error
-                imageTooLarge: "Image size is too large. Maximum size is {0} MB." // New translation for image too large
+                failedToUploadImage: "Failed to upload image. Please ensure correct file format and reasonable size.", // New translation for image upload error
+                imageTooLarge: "Image size is too large. Maximum size is {0} MB.", // New translation for image too large
+                webShareApiPermissionDenied: "Permission denied or Web Share API is not supported in this environment." // New translation for share error
             }
         };
 
@@ -2177,7 +2145,7 @@
                     console.error('Error sharing PDF:', error);
                     if (error.name === 'NotAllowedError') {
                         // More specific message for permission denied
-                        showMessage('error', 'webShareApiNotSupported', ['Izin ditolak atau Web Share API tidak didukung di lingkungan ini.']);
+                        showMessage('error', 'webShareApiPermissionDenied');
                     } else if (error.name !== 'AbortError') { // User cancelled share
                         showMessage('error', 'failedToGeneratePdf'); // Generic error for sharing failure
                     }
@@ -2786,7 +2754,7 @@
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
-                const apiKey = ""; // Canvas will provide this at runtime
+                const apiKey = "AIzaSyDuLwN9Mkr4zjIpZmzOl12NfYrOGRS8Fpo"; // User provided API key
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {

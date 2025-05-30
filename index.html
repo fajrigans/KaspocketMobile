@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.0/dist/browser-image-compression.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/esc-pos-encoder@1.3.1/dist/esc-pos-encoder.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Manrope', 'Noto Sans', sans-serif;
@@ -142,31 +143,39 @@
         </div>
 
         <div id="dashboardPage" class="flex flex-col h-full w-full justify-between hidden">
-            <div class="flex-1 overflow-y-auto">
-                <div class="flex items-center bg-blue-600 text-white p-4 justify-between rounded-t-lg">
-                    <h2 class="text-lg font-bold" data-translate="dashboardTitle">Kaspocket Dashboard</h2>
-                    <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors text-sm" data-translate="logoutButton">Logout</button>
-                </div>
-                <div class="p-4">
-                    <p class="text-gray-700 mb-4" data-translate="welcomeMessage">Welcome, <span id="currentUserId" class="font-semibold"></span>!</p>
-                    <div class="grid grid-cols-1 gap-4">
-                        <button id="goToCashierButton" class="bg-green-500 hover:bg-green-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
-                            <i class="fas fa-cash-register mr-2"></i> <span data-translate="openCashier">Open Cashier</span>
-                        </button>
-                        <button id="goToProductManagementButton" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
-                            <i class="fas fa-boxes mr-2"></i> <span data-translate="manageProducts">Manage Products</span>
-                        </button>
-                        <button id="goToTransactionHistoryButton" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
-                            <i class="fas fa-history mr-2"></i> <span data-translate="transactionHistory">Transaction History</span>
-                        </button>
-                        <button id="goToReportsButton" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
-                            <i class="fas fa-chart-line mr-2"></i> <span data-translate="viewReports">View Reports</span>
-                        </button>
-                        <button id="goToSettingsButton" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-4 rounded-lg text-lg font-semibold shadow-md transition-colors flex items-center justify-center">
-                            <i class="fas fa-cog mr-2"></i> <span data-translate="settings">Settings</span>
-                        </button>
+            <div class="flex items-center bg-white p-4 justify-between rounded-t-lg">
+                <h2 class="text-lg font-bold text-gray-800" data-translate="appTitle">Kaspocket</h2>
+                <button id="goToSettingsButton" class="text-gray-700 hover:text-gray-900 transition-colors text-lg">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4">
+                <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate="menuTitle">Menu</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div id="goToCashierButton" class="dashboard-card cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img src="https://placehold.co/150x150/E0F2F1/26A69A?text=POS" alt="POS" class="w-full h-32 object-cover">
+                        <p class="text-center text-lg font-semibold text-gray-800 p-3" data-translate="openCashier">POS</p>
+                    </div>
+                    <div id="goToProductManagementButton" class="dashboard-card cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img src="https://placehold.co/150x150/E8F5E9/4CAF50?text=Produk" alt="Produk" class="w-full h-32 object-cover">
+                        <p class="text-center text-lg font-semibold text-gray-800 p-3" data-translate="manageProducts">Produk</p>
+                    </div>
+                    <div id="goToTransactionHistoryButton" class="dashboard-card cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img src="https://placehold.co/150x150/E3F2FD/2196F3?text=Riwayat" alt="Riwayat" class="w-full h-32 object-cover">
+                        <p class="text-center text-lg font-semibold text-gray-800 p-3" data-translate="transactionHistory">Riwayat</p>
+                    </div>
+                    <div id="goToReportsButton" class="dashboard-card cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img src="https://placehold.co/150x150/FFFDE7/FFC107?text=Laporan" alt="Laporan" class="w-full h-32 object-cover">
+                        <p class="text-center text-lg font-semibold text-gray-800 p-3" data-translate="viewReports">Laporan</p>
+                    </div>
+                    <div id="goToSettingsButtonBottom" class="dashboard-card cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img src="https://placehold.co/150x150/FBE9E7/FF5722?text=Pengaturan" alt="Pengaturan" class="w-full h-32 object-cover">
+                        <p class="text-center text-lg font-semibold text-gray-800 p-3" data-translate="settings">Pengaturan</p>
                     </div>
                 </div>
+            </div>
+            <div class="flex justify-center p-4">
+                <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg text-base font-semibold shadow-md transition-colors w-full max-w-xs" data-translate="logoutButton">Logout</button>
             </div>
         </div>
 
@@ -244,14 +253,13 @@
                     <p class="text-center text-gray-500" id="emptyCartMessage" data-translate="emptyCartMessage">Cart is empty.</p>
                 </div>
 
-                <!-- <div class="flex items-center gap-2 px-4 pb-2 pt-4">
-                    <label for="taxInput" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="taxLabel">Tax (%)</label>
-                    <input type="number" id="taxInput" value="0" min="0" max="100" step="1"
-                        class="form-input w-20 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-right text-base font-medium">
-                </div> -->
+                <div class="flex items-center gap-2 px-4 pb-2 pt-4">
+                    <label class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="taxLabel">Pajak (%)</label>
+                    <span id="displayTaxRate" class="text-[#60758a] text-base font-medium">0%</span>
+                </div>
 
                 <div class="flex items-center gap-2 px-4 pb-2 pt-4">
-                    <label for="discountInput" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="discountLabel">Discount (%)</label>
+                    <label for="discountInput" class="text-[#111418] text-base font-bold leading-tight tracking-[-0.015em]" data-translate="discountLabel">Diskon (%)</label>
                     <input type="number" id="discountInput" value="0" min="0" max="100" step="1"
                         class="form-input w-20 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-right text-base font-medium">
                 </div>
@@ -435,7 +443,7 @@
             <div><div class="h-5 bg-white"></div></div>
         </div>
 
-        <div id="taxModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div id="taxModal" class="fixed inset-0 bg-black bg-opacity50 flex items-center justify-center z-50 hidden">
             <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
                 <button id="closeTaxModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                 <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="setTaxRateTitle">Atur Tarif Pajak</h3>
@@ -453,8 +461,36 @@
         <div id="printerSettingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
                 <button id="closePrinterSettingsModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="designReceiptTitle">Desain Struk (Simulasi)</h3>
+                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="printerSettingsTitle">Pengaturan Printer</h3>
 
+                <div class="mb-4">
+                    <label for="printerAddressInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="printerAddressLabel">Alamat IP/Nama Printer</label>
+                    <input type="text" id="printerAddressInput" placeholder="misal., 192.168.1.100"
+                        class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm" data-translate-placeholder="printerAddressPlaceholder">
+                </div>
+
+                <div class="mb-4">
+                    <label for="printerTypeSelect" class="block text-sm font-medium text-gray-700 mb-1" data-translate="printerTypeLabel">Jenis Printer</label>
+                    <select id="printerTypeSelect" class="form-select w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm">
+                        <option value="thermal" data-translate="thermalPrinter">Thermal</option>
+                        <option value="dot_matrix" data-translate="dotMatrixPrinter">Dot Matrix</option>
+                        <option value="laser" data-translate="laserPrinter">Laser</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1" data-translate="printerTypeDisclaimer">Catatan: Fitur cetak ESC/POS terutama mendukung printer thermal.</p>
+                </div>
+
+                <div class="mb-4">
+                    <label for="paperWidthInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="paperWidthLabel">Lebar Kertas (Karakter per Baris)</label>
+                    <input type="number" id="paperWidthInput" placeholder="misal., 42 untuk 58mm, 56 untuk 80mm" value="42" min="10" max="100"
+                        class="form-input w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm" data-translate-placeholder="paperWidthPlaceholder">
+                </div>
+
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox" id="autoPrintCheckbox" class="form-checkbox h-5 w-5 text-blue-600 rounded">
+                    <label for="autoPrintCheckbox" class="ml-2 text-sm font-medium text-gray-700" data-translate="autoPrintLabel">Cetak Otomatis Setelah Transaksi</label>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4 text-gray-800" data-translate="designReceiptTitle">Desain Struk (Simulasi)</h3>
                 <div class="mb-4">
                     <label for="receiptHeaderInput" class="block text-sm font-medium text-gray-700 mb-1" data-translate="receiptHeaderLabel">Teks Header Struk</label>
                     <textarea id="receiptHeaderInput" rows="3" placeholder="Terima kasih atas pembelian Anda!"
@@ -467,7 +503,7 @@
                         class="form-textarea w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2 text-sm" data-translate-placeholder="receiptFooterPlaceholder"></textarea>
                 </div>
 
-                <button id="saveReceiptDesignButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full" data-translate="saveReceiptDesignButton">Simpan Desain Struk</button>
+                <button id="savePrinterSettingsButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full" data-translate="savePrinterSettingsButton">Simpan Pengaturan Printer</button>
 
                 <p class="text-xs text-gray-500 mt-4" data-translate="receiptDesignDisclaimer">
                     Disclaimer: Desain struk WYSIWYG penuh tidak didukung di lingkungan browser ini. Fitur ini menyediakan kustomisasi header/footer dasar.
@@ -542,7 +578,8 @@
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
             signOut,
-            sendPasswordResetEmail
+            sendPasswordResetEmail,
+            signInAnonymously // Import signInAnonymously
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import {
             getFirestore,
@@ -565,8 +602,9 @@
             getDownloadURL
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
-        // Import jspdf for PDF generation
-        import { jsPDF } from "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+        // Import jspdf for PDF generation - Changed to access from global window object
+        const jsPDF = window.jspdf.jsPDF; // Access the constructor from the global object
+
 
         // Firebase Configuration (from user's input)
         const firebaseConfig = {
@@ -609,11 +647,12 @@
                 dashboardTitle: "Dasbor Kaspocket",
                 logoutButton: "Keluar",
                 welcomeMessage: "Selamat datang,",
-                openCashier: "Buka Kasir",
-                manageProducts: "Kelola Produk",
-                transactionHistory: "Riwayat Transaksi",
-                viewReports: "Lihat Laporan",
-                settings: "Pengaturan",
+                openCashier: "POS", // Updated for new UI
+                manageProducts: "Produk", // Updated for new UI
+                transactionHistory: "Riwayat", // Updated for new UI
+                viewReports: "Laporan", // Updated for new UI
+                settings: "Pengaturan", // Updated for new UI
+                menuTitle: "Menu", // New translation for dashboard menu title
                 addNewProduct: "Tambah Produk Baru",
                 productNameLabel: "Nama Produk",
                 productNamePlaceholder: "Nama Produk",
@@ -677,12 +716,12 @@
                 setTaxRateTitle: "Atur Tarif Pajak",
                 taxRateLabel: "Tarif Pajak (%)",
                 saveTaxRateButton: "Simpan Tarif Pajak",
-                designReceiptTitle: "Desain Struk",
+                designReceiptTitle: "Desain Struk (Simulasi)", // Updated translation key
                 receiptHeaderLabel: "Teks Header Struk",
                 receiptHeaderPlaceholder: "Terima kasih atas pembelian Anda!",
                 receiptFooterLabel: "Teks Footer Struk",
                 receiptFooterPlaceholder: "Kunjungi kami lagi segera!",
-                saveReceiptDesignButton: "Simpan Desain Struk",
+                savePrinterSettingsButton: "Simpan Pengaturan Printer", // Renamed button
                 receiptDesignDisclaimer: "Disclaimer: Desain struk WYSIWYG penuh tidak didukung di lingkungan browser ini. Fitur ini menyediakan kustomisasi header/footer dasar.",
                 indonesianLanguage: "Bahasa Indonesia",
                 englishLanguage: "English",
@@ -692,7 +731,7 @@
                 transactionIdLabel: "ID Transaksi:",
                 generatePdfButton: "Jadi PDF",
                 sharePdfButton: "Bagikan",
-                printReceiptButton: "Cetak Struk", // New translation key
+                printReceiptButton: "Cetak Struk",
                 outOfStock: "Stok Habis",
                 cannotAddMore: "Tidak bisa menambahkan lebih banyak",
                 maximumStockReached: "Stok maksimal tercapai.",
@@ -747,7 +786,23 @@
                 viewDetailsButton: "Lihat Detail",
                 hideDetailsButton: "Sembunyikan Detail",
                 viewReceiptButton: "Struk",
-                failedToPrintReceipt: "Gagal mencetak struk. Pastikan aplikasi jembatan printer berjalan dan terhubung." // New translation
+                failedToPrintReceipt: "Gagal mencetak struk. Pastikan aplikasi jembatan printer berjalan dan terhubung.",
+                printerSettingsTitle: "Pengaturan Printer", // New
+                printerAddressLabel: "Alamat IP/Nama Printer", // New
+                printerAddressPlaceholder: "misal., 192.168.1.100", // New
+                printerTypeLabel: "Jenis Printer", // New
+                thermalPrinter: "Thermal", // New
+                dotMatrixPrinter: "Dot Matrix", // New
+                laserPrinter: "Laser", // New
+                printerTypeDisclaimer: "Catatan: Fitur cetak ESC/POS terutama mendukung printer thermal.", // New
+                paperWidthLabel: "Lebar Kertas (Karakter per Baris)", // New
+                paperWidthPlaceholder: "misal., 42 untuk 58mm, 56 untuk 80mm", // New
+                autoPrintLabel: "Cetak Otomatis Setelah Transaksi", // New
+                printerSettingsSavedSuccessfully: "Pengaturan printer berhasil disimpan!", // New
+                failedToSavePrinterSettings: "Gagal menyimpan pengaturan printer.", // New
+                invalidPaperWidth: "Lebar kertas harus angka antara 10 dan 100.", // New
+                imageUploadFailed: "Gagal mengunggah gambar. Pastikan format file benar dan ukurannya tidak terlalu besar.", // New translation for image upload error
+                imageTooLarge: "Ukuran gambar terlalu besar. Ukuran maksimal adalah {0} MB." // New translation for image too large
             },
             en: {
                 appTitle: "Kaspocket",
@@ -763,11 +818,12 @@
                 dashboardTitle: "Kaspocket Dashboard",
                 logoutButton: "Logout",
                 welcomeMessage: "Welcome,",
-                openCashier: "Open Cashier",
-                manageProducts: "Manage Products",
-                transactionHistory: "Transaction History",
-                viewReports: "View Reports",
-                settings: "Settings",
+                openCashier: "POS", // Updated for new UI
+                manageProducts: "Products", // Updated for new UI
+                transactionHistory: "History", // Updated for new UI
+                viewReports: "Reports", // Updated for new UI
+                settings: "Settings", // Updated for new UI
+                menuTitle: "Menu", // New translation for dashboard menu title
                 addNewProduct: "Add New Product",
                 productNameLabel: "Product Name",
                 productNamePlaceholder: "Product Name",
@@ -830,12 +886,12 @@
                 setTaxRateTitle: "Set Tax Rate",
                 taxRateLabel: "Tax Rate (%)",
                 saveTaxRateButton: "Save Tax Rate",
-                designReceiptTitle: "Design Receipt",
+                designReceiptTitle: "Design Receipt (Simulation)", // Updated translation key
                 receiptHeaderLabel: "Receipt Header Text",
                 receiptHeaderPlaceholder: "Thank you for your purchase!",
                 receiptFooterLabel: "Receipt Footer Text",
                 receiptFooterPlaceholder: "Visit us again soon!",
-                saveReceiptDesignButton: "Save Receipt Design",
+                savePrinterSettingsButton: "Save Printer Settings", // Renamed button
                 receiptDesignDisclaimer: "Disclaimer: Full WYSIWYG receipt design is not supported in this browser environment. This feature provides basic header/footer customization.",
                 indonesianLanguage: "Bahasa Indonesia",
                 englishLanguage: "English",
@@ -845,7 +901,7 @@
                 transactionIdLabel: "Transaction ID:",
                 generatePdfButton: "Generate PDF",
                 sharePdfButton: "Share",
-                printReceiptButton: "Print Receipt", // New translation
+                printReceiptButton: "Print Receipt",
                 outOfStock: "Out of Stock",
                 cannotAddMore: "Cannot add more",
                 maximumStockReached: "Maximum stock reached.",
@@ -857,8 +913,8 @@
                 transactionError: "Error",
                 failedToProcessTransaction: "Failed to process transaction. Please try again.",
                 confirmDelete: "Confirm Delete",
-                areYouYousureDeleteProduct: "Apakah Anda yakin ingin menghapus produk ini?",
-                deleteButton: "Hapus",
+                areYouYousureDeleteProduct: "Are you sure you want to delete this product?",
+                deleteButton: "Delete",
                 productDeletedSuccessfully: "Product deleted successfully!",
                 failedToDeleteProduct: "Failed to delete product.",
                 productUpdatedSuccessfully: "Product updated successfully!",
@@ -866,11 +922,11 @@
                 failedToSaveProduct: "Failed to save product.",
                 enterValidProductDetails: "Please enter valid product name, positive price, and non-negative stock.",
                 failedToUploadImage: "Failed to upload image.",
-                printingReceipt: "Struk sedang dibuat PDF...",
-                pdfGeneratedSuccessfully: "PDF berhasil dibuat!",
-                failedToGeneratePdf: "Gagal membuat PDF.",
-                webShareApiNotSupported: "Web Share API tidak didukung di browser ini.",
-                receiptDesignSavedSuccessfully: "Desain struk berhasil disimpan!",
+                printingReceipt: "Printing receipt...",
+                pdfGeneratedSuccessfully: "PDF generated successfully!",
+                failedToGeneratePdf: "Failed to generate PDF.",
+                webShareApiNotSupported: "Web Share API is not supported in this browser.",
+                receiptDesignSavedSuccessfully: "Receipt design saved successfully!",
                 failedToSaveReceiptDesign: "Failed to save receipt design.",
                 failedToSignIn: "Failed to sign in. Please check your credentials.",
                 userNotFound: "No user found with this email.",
@@ -900,7 +956,23 @@
                 viewDetailsButton: "View Details",
                 hideDetailsButton: "Hide Details",
                 viewReceiptButton: "Receipt",
-                failedToPrintReceipt: "Failed to print receipt. Ensure the printer bridge application is running and connected." // New translation
+                failedToPrintReceipt: "Failed to print receipt. Ensure the printer bridge application is running and connected.",
+                printerSettingsTitle: "Pengaturan Printer", // New
+                printerAddressLabel: "Alamat IP/Nama Printer", // New
+                printerAddressPlaceholder: "misal., 192.168.1.100", // New
+                printerTypeLabel: "Jenis Printer", // New
+                thermalPrinter: "Thermal", // New
+                dotMatrixPrinter: "Dot Matrix", // New
+                laserPrinter: "Laser", // New
+                printerTypeDisclaimer: "Note: ESC/POS printing features primarily support thermal printers.", // New
+                paperWidthLabel: "Lebar Kertas (Karakter per Baris)", // New
+                paperWidthPlaceholder: "e.g., 42 for 58mm, 56 for 80mm", // New
+                autoPrintLabel: "Auto Print After Transaction", // New
+                printerSettingsSavedSuccessfully: "Printer settings saved successfully!", // New
+                failedToSavePrinterSettings: "Failed to save printer settings.", // New
+                invalidPaperWidth: "Paper width must be a number between 10 and 100.", // New
+                imageUploadFailed: "Failed to upload image. Please ensure correct file format and reasonable size.", // New translation for image upload error
+                imageTooLarge: "Image size is too large. Maximum size is {0} MB." // New translation for image too large
             }
         };
 
@@ -927,14 +999,17 @@
         const signUpButton = document.getElementById('signUpButton');
         const signInLink = document.getElementById('signInLink');
 
-        const currentUserIdDisplay = document.getElementById('currentUserId');
+        // Removed: const currentUserIdDisplay = document.getElementById('currentUserId');
         const logoutButton = document.getElementById('logoutButton');
-        const goToCashierButton = document.getElementById('goToCashierButton');
-        const goToProductManagementButton = document.getElementById('goToProductManagementButton');
-        const goToTransactionHistoryButton = document.getElementById('goToTransactionHistoryButton');
-        const goToReportsButton = document.getElementById('goToReportsButton');
-        const goToSettingsButton = document.getElementById('goToSettingsButton');
+        // Updated IDs for dashboard cards
+        const goToCashierCard = document.getElementById('goToCashierButton');
+        const goToProductManagementCard = document.getElementById('goToProductManagementButton');
+        const goToTransactionHistoryCard = document.getElementById('goToTransactionHistoryButton');
+        const goToReportsCard = document.getElementById('goToReportsButton');
+        const goToSettingsButtonTop = document.getElementById('goToSettingsButton'); // Top right settings icon
+        const goToSettingsButtonBottom = document.getElementById('goToSettingsButtonBottom'); // Bottom settings card
         const goToSettingsFromCashier = document.getElementById('goToSettingsFromCashier');
+
 
         const backToDashboardFromProducts = document.getElementById('backToDashboardFromProducts');
         const productForm = document.getElementById('productForm');
@@ -958,7 +1033,7 @@
         const emptyCartMessage = document.getElementById('emptyCartMessage');
         const cartTotalSpan = document.getElementById('cartTotal');
         const processTransactionButton = document.getElementById('processTransactionButton');
-        // Removed taxInput from cashier page (HTML and JS reference)
+        const displayTaxRate = document.getElementById('displayTaxRate'); // New element for tax rate display
         const discountInput = document.getElementById('discountInput');
         const paymentMethodSelect = document.getElementById('paymentMethodSelect');
 
@@ -1008,10 +1083,17 @@
         const closePrinterSettingsModalButton = document.getElementById('closePrinterSettingsModal');
         const receiptHeaderInput = document.getElementById('receiptHeaderInput');
         const receiptFooterInput = document.getElementById('receiptFooterInput');
-        const saveReceiptDesignButton = document.getElementById('saveReceiptDesignButton');
+        const savePrinterSettingsButton = document.getElementById('savePrinterSettingsButton'); // Renamed
+
+        // New printer settings UI elements
+        const printerAddressInput = document.getElementById('printerAddressInput');
+        const printerTypeSelect = document.getElementById('printerTypeSelect');
+        const paperWidthInput = document.getElementById('paperWidthInput');
+        const autoPrintCheckbox = document.getElementById('autoPrintCheckbox');
+
 
         const languageSettingsModal = document.getElementById('languageSettingsModal');
-        const closeLanguageSettingsModalButton = document = document.getElementById('closeLanguageSettingsModal');
+        const closeLanguageSettingsModalButton = document.getElementById('closeLanguageSettingsModal');
         const saveLanguageButton = document.getElementById('saveLanguageButton');
 
         const messageModal = document.getElementById('messageModal');
@@ -1034,7 +1116,7 @@
         const receiptCustomFooterSpan = document.getElementById('receiptCustomFooter');
         const generatePdfButton = document.getElementById('generatePdfButton');
         const shareReceiptButton = document.getElementById('shareReceiptButton');
-        const printReceiptButton = document.getElementById('printReceiptButton'); // New print button
+        const printReceiptButton = document.getElementById('printReceiptButton');
 
 
         // --- Utility Functions ---
@@ -1066,6 +1148,11 @@
             const reportPeriodWeeklySpan = document.querySelector('#reportPeriodWeekly + span');
             const reportPeriodMonthlySpan = document.querySelector('#reportPeriodMonthly + span');
 
+            // Update printer type options
+            const thermalOption = document.querySelector('#printerTypeSelect option[value="thermal"]');
+            const dotMatrixOption = document.querySelector('#printerTypeSelect option[value="dot_matrix"]');
+            const laserOption = document.querySelector('#printerTypeSelect option[value="laser"]');
+
 
             if (currentLanguage === 'id') {
                 if (productFormTitleElement) productFormTitleElement.textContent = productIdInput.value ? 'Edit Produk' : 'Tambah Produk Baru';
@@ -1094,6 +1181,11 @@
                 if (reportPeriodWeeklySpan) reportPeriodWeeklySpan.textContent = translations.id.weeklyReport;
                 if (reportPeriodMonthlySpan) reportPeriodMonthlySpan.textContent = translations.id.monthlyReport;
 
+                // Update printer type options
+                if (thermalOption) thermalOption.textContent = translations.id.thermalPrinter;
+                if (dotMatrixOption) dotMatrixOption.textContent = translations.id.dotMatrixPrinter;
+                if (laserOption) laserOption.textContent = translations.id.laserPrinter;
+
             } else { // English
                 if (productFormTitleElement) productFormTitleElement.textContent = productIdInput.value ? 'Edit Product' : 'Add New Product';
                 if (saveProductButtonElement) saveProductButtonElement.textContent = productIdInput.value ? 'Update Product' : 'Add Product';
@@ -1120,6 +1212,11 @@
                 if (reportPeriodDailySpan) reportPeriodDailySpan.textContent = translations.en.dailyReport;
                 if (reportPeriodWeeklySpan) reportPeriodWeeklySpan.textContent = translations.en.weeklyReport;
                 if (reportPeriodMonthlySpan) reportPeriodMonthlySpan.textContent = translations.en.monthlyReport;
+
+                // Update printer type options
+                if (thermalOption) thermalOption.textContent = translations.en.thermalPrinter;
+                if (dotMatrixOption) dotMatrixOption.textContent = translations.en.dotMatrixPrinter;
+                if (laserOption) laserOption.textContent = translations.en.laserPrinter;
             }
         }
 
@@ -1298,13 +1395,15 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                await setDoc(doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", user.uid), {
+                // Store user profile directly under 'users' collection
+                await setDoc(doc(db, "users", user.uid), {
                     fullName: fullName,
                     email: email,
                     createdAt: serverTimestamp()
                 });
 
-                await setDoc(doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", user.uid, "settings", "profile"), {
+                // Store user settings directly under 'users/{userId}/settings'
+                await setDoc(doc(db, "users", user.uid, "settings", "profile"), {
                     businessName: "My Business",
                     address: "Jl. Contoh No. 123",
                     phoneNumber: "081234567890",
@@ -1312,7 +1411,11 @@
                     taxRate: 0, // Default tax rate
                     language: "id", // Default language for new users
                     receiptHeader: "", // Default custom receipt header
-                    receiptFooter: "" // Default custom receipt footer
+                    receiptFooter: "", // Default custom receipt footer
+                    printerAddress: "", // New default
+                    printerType: "thermal", // New default
+                    paperWidth: 42, // New default for 58mm
+                    autoPrint: false // New default
                 });
 
                 showMessage('transactionSuccess', 'accountCreatedSuccessfully');
@@ -1453,46 +1556,58 @@
             }
 
             let imageUrl = '';
+            // If there's an existing product and no new image is selected, retain the old image URL
+            if (id) {
+                const existingProduct = products.find(p => p.id === id);
+                if (existingProduct) {
+                    imageUrl = existingProduct.imageUrl || '';
+                }
+            }
+
             if (imageFile) {
+                const MAX_ORIGINAL_IMAGE_SIZE_MB = 5; // Batasan ukuran file asli dalam MB
+                if (imageFile.size > MAX_ORIGINAL_IMAGE_SIZE_MB * 1024 * 1024) {
+                    showMessage('error', 'imageTooLarge', [MAX_ORIGINAL_IMAGE_SIZE_MB]);
+                    hideLoading();
+                    return;
+                }
+
                 console.log("Original image file size:", imageFile.size / 1024 / 1024, "MB");
                 try {
                     // Compress the image before uploading
                     const options = {
-                        maxSizeMB: 1,           // Max size in MB
-                        maxWidthOrHeight: 1024, // Max width or height in pixels
+                        maxSizeMB: 1,           // Max size in MB after compression
+                        maxWidthOrHeight: 1024, // Max width or height in pixels after compression
                         useWebWorker: true      // Use web worker for better performance
                     };
                     const compressedFile = await imageCompression(imageFile, options);
                     console.log("Compressed image file size:", compressedFile.size / 1024 / 1024, "MB");
 
-                    const imageRef = ref(storage, `artifacts/${typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'}/users/${currentUserId}/product_images/${Date.now()}-${compressedFile.name}`);
+                    // Store product images under 'users/{userId}/product_images'
+                    const imageRef = ref(storage, `users/${currentUserId}/product_images/${Date.now()}-${compressedFile.name}`);
                     const snapshot = await uploadBytes(imageRef, compressedFile); // Upload compressed file
                     imageUrl = await getDownloadURL(snapshot.ref);
                     console.log("Image uploaded successfully. URL:", imageUrl);
                 } catch (err) {
                     console.error("Image upload error:", err);
-                    showMessage('error', 'failedToUploadImage');
+                    // Use the new, more specific translation key for image upload failure
+                    showMessage('error', 'imageUploadFailed');
                     hideLoading(); // Hide loading if image upload fails
                     return; // Stop further processing if image upload fails
                 }
-            } else if (id) {
-                const existingProduct = products.find(p => p.id === id);
-                if (existingProduct) {
-                    imageUrl = existingProduct.imageUrl || '';
-                    console.log("No new image selected, retaining existing image URL:", imageUrl);
-                }
             }
+
 
             const productData = {
                 name,
                 price,
                 stock,
                 imageUrl,
-                userId: currentUserId // This is important for security rules and data partitioning
             };
 
             try {
-                const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+                // Store products under 'users/{userId}/products' collection
+                const productsCollectionRef = collection(db, "users", currentUserId, "products");
 
                 if (id) {
                     // This branch is for updating an existing product
@@ -1553,7 +1668,7 @@
          */
         async function deleteProduct(productId) {
             modalTitle.textContent = translations[currentLanguage].confirmDelete;
-            modalMessage.textContent = translations[currentLanguage].areYouSureDeleteProduct;
+            modalMessage.textContent = translations[currentLanguage].areYouYousureDeleteProduct;
             messageModal.classList.remove('hidden');
 
             const confirmAction = new Promise((resolve) => {
@@ -1579,7 +1694,8 @@
 
             showLoading();
             try {
-                const productDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products", productId);
+                // Delete product from 'users/{userId}/products' collection
+                const productDocRef = doc(db, "users", currentUserId, "products", productId);
                 await deleteDoc(productDocRef);
                 showMessage('transactionSuccess', 'productDeletedSuccessfully');
             } catch (error) {
@@ -1709,6 +1825,9 @@
                 cartItemsDiv.appendChild(cartItemDiv);
             });
 
+            // Display the current tax rate from businessProfile
+            displayTaxRate.textContent = `${businessProfile.taxRate || 0}%`;
+
             cartTotalSpan.textContent = formatCurrency(calculateCartTotal());
             document.querySelectorAll('.decrease-quantity-btn').forEach(button => {
                 button.addEventListener('click', (event) => updateCartQuantity(event.target.dataset.id || event.target.closest('button').dataset.id, -1));
@@ -1786,9 +1905,9 @@
                 totalAmount = Math.max(0, totalAmount);
 
 
-                const transactionsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "transactions");
+                // Store transactions under 'users/{userId}/transactions' collection
+                const transactionsCollectionRef = collection(db, "users", currentUserId, "transactions");
                 const newTransactionRef = await addDoc(transactionsCollectionRef, {
-                    userId: currentUserId,
                     timestamp: serverTimestamp(),
                     items: transactionItems,
                     totalAmount: totalAmount,
@@ -1798,7 +1917,8 @@
                     appliedPaymentMethod: paymentMethod
                 });
 
-                const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+                // Update product stock under 'users/{userId}/products' collection
+                const productsCollectionRef = collection(db, "users", currentUserId, "products");
                 for (const item of cart) {
                     const productDocRef = doc(productsCollectionRef, item.productId);
                     const productDoc = await getDoc(productDocRef);
@@ -1814,7 +1934,7 @@
                 renderCart();
                 showMessage('transactionSuccess', 'transactionProcessedSuccessfully');
                 // Pass the entire transaction data to showReceipt
-                showReceipt({
+                const transactionDataForReceipt = {
                     id: newTransactionRef.id,
                     timestamp: { toDate: () => new Date() }, // Mock timestamp for immediate display
                     items: transactionItems,
@@ -1823,7 +1943,16 @@
                     appliedTaxRate: taxRate,
                     appliedDiscountRate: discountRate,
                     appliedPaymentMethod: paymentMethod
-                });
+                };
+                showReceipt(transactionDataForReceipt);
+
+                // Check auto-print setting
+                if (businessProfile.autoPrint) {
+                    // Delay slightly to allow message modal to show, then print
+                    setTimeout(() => {
+                        printReceiptViaBridge(transactionDataForReceipt);
+                    }, 500); // 500ms delay
+                }
 
             } catch (error) {
                 console.error("Transaction Processing Error:", error);
@@ -1897,7 +2026,7 @@
         async function generateReceiptPdf() {
             showMessage('generatePdfButton', 'printingReceipt'); // Use the updated message
             try {
-                // Access jsPDF from global scope or import if not already
+                // jsPDF is now directly on window.jspdf as the constructor
                 const doc = new jsPDF();
 
                 let y = 10;
@@ -1980,6 +2109,7 @@
         async function shareReceiptPdf() {
             if (navigator.share) {
                 try {
+                    // jsPDF is now directly on window.jspdf as the constructor
                     const doc = new jsPDF();
                     // Re-generate content for sharing (similar to PDF generation)
                     let y = 10;
@@ -2045,7 +2175,10 @@
                     showMessage('transactionSuccess', 'pdfGeneratedSuccessfully'); // Assuming share implies success
                 } catch (error) {
                     console.error('Error sharing PDF:', error);
-                    if (error.name !== 'AbortError') { // User cancelled share
+                    if (error.name === 'NotAllowedError') {
+                        // More specific message for permission denied
+                        showMessage('error', 'webShareApiNotSupported', ['Izin ditolak atau Web Share API tidak didukung di lingkungan ini.']);
+                    } else if (error.name !== 'AbortError') { // User cancelled share
                         showMessage('error', 'failedToGeneratePdf'); // Generic error for sharing failure
                     }
                 }
@@ -2061,10 +2194,29 @@
         async function printReceiptViaBridge(transactionData) {
             showLoading(); // Show loading while trying to print
             try {
-                const encoder = new EscPosEncoder();
+                // Access EscPosEncoder directly inside the function to ensure it's available
+                // Ensure window.EscPosEncoder is a function before proceeding
+                if (typeof window.EscPosEncoder !== 'function') {
+                    throw new Error('EscPosEncoder is not available or not a constructor function. Please ensure the library is loaded correctly.');
+                }
+                const encoder = new window.EscPosEncoder(); // Use window.EscPosEncoder directly
+
                 const now = new Date();
                 const formattedDate = now.toLocaleDateString(currentLanguage === 'id' ? 'id-ID' : 'en-US');
                 const formattedTime = now.toLocaleTimeString(currentLanguage === 'id' ? 'id-ID' : 'en-US');
+
+                const paperWidth = businessProfile.paperWidth || 42; // Default to 42 if not set
+
+                // Helper to pad and truncate strings for fixed-width printing
+                const formatLine = (text, width, align = 'left') => {
+                    if (text.length > width) {
+                        return text.substring(0, width);
+                    }
+                    if (align === 'right') {
+                        return text.padStart(width);
+                    }
+                    return text.padEnd(width);
+                };
 
                 // Initialize printer
                 encoder.initialize();
@@ -2073,11 +2225,11 @@
                 encoder.align('center').text(businessProfile.businessName || translations[currentLanguage].businessNamePlaceholder).end();
                 encoder.align('center').text(businessProfile.address || translations[currentLanguage].addressPlaceholder).end();
                 encoder.align('center').text(businessProfile.phoneNumber || translations[currentLanguage].phoneNumberPlaceholder).end();
-                encoder.align('center').text('-----------------------------').end();
+                encoder.align('center').text(formatLine('-----------------------------', paperWidth, 'center')).end(); // Use formatLine for separator
 
                 if (businessProfile.receiptHeader) {
                     encoder.align('center').text(businessProfile.receiptHeader).end();
-                    encoder.align('center').text('-----------------------------').end();
+                    encoder.align('center').text(formatLine('-----------------------------', paperWidth, 'center')).end();
                 }
 
                 // Detail Transaksi
@@ -2085,18 +2237,25 @@
                 encoder.align('left').text(`Waktu: ${formattedTime}`).end();
                 encoder.align('left').text(`${translations[currentLanguage].transactionIdLabel} ${transactionData.id}`).end();
                 encoder.align('left').text(`${translations[currentLanguage].paymentMethodLabel} ${transactionData.appliedPaymentMethod}`).end();
-                encoder.text('-----------------------------').end();
+                encoder.text(formatLine('-----------------------------', paperWidth, 'center')).end();
 
                 // Item-item Produk
-                encoder.text('Produk           Qty   Harga     Total').end();
+                // Adjust column widths based on paperWidth
+                const nameColWidth = Math.floor(paperWidth * 0.4);
+                const qtyColWidth = Math.floor(paperWidth * 0.15);
+                const priceColWidth = Math.floor(paperWidth * 0.2);
+                const totalColWidth = paperWidth - nameColWidth - qtyColWidth - priceColWidth; // Remaining width
+
+                encoder.text(`${formatLine('Produk', nameColWidth)}${formatLine('Qty', qtyColWidth, 'right')}${formatLine('Harga', priceColWidth, 'right')}${formatLine('Total', totalColWidth, 'right')}`).end();
+
                 transactionData.items.forEach(item => {
-                    const itemName = item.name.padEnd(15).substring(0, 15); // Pad atau potong nama
-                    const qty = item.quantity.toString().padStart(3);
-                    const price = formatCurrency(item.price).replace('Rp', '').trim().padStart(9); // Format harga tanpa Rp
-                    const total = formatCurrency(item.price * item.quantity).replace('Rp', '').trim().padStart(9);
-                    encoder.text(`${itemName} ${qty} ${price} ${total}`).end();
+                    const itemName = formatLine(item.name, nameColWidth);
+                    const qty = formatLine(item.quantity.toString(), qtyColWidth, 'right');
+                    const price = formatLine(formatCurrency(item.price).replace('Rp', '').trim(), priceColWidth, 'right');
+                    const total = formatLine(formatCurrency(item.price * item.quantity).replace('Rp', '').trim(), totalColWidth, 'right');
+                    encoder.text(`${itemName}${qty}${price}${total}`).end();
                 });
-                encoder.text('-----------------------------').end();
+                encoder.text(formatLine('-----------------------------', paperWidth, 'center')).end();
 
                 // Subtotal, Pajak, Diskon, Total
                 encoder.align('right').text(`Subtotal: ${formatCurrency(transactionData.subtotalAmount)}`).end();
@@ -2109,11 +2268,11 @@
                     encoder.align('right').text(`${translations[currentLanguage].discountLabel} (${transactionData.appliedDiscountRate}%): -${formatCurrency(discountAmount)}`).end();
                 }
                 encoder.align('right').text(`${translations[currentLanguage].totalLabel} ${formatCurrency(transactionData.totalAmount)}`).end();
-                encoder.text('-----------------------------').end();
+                encoder.text(formatLine('-----------------------------', paperWidth, 'center')).end();
 
                 if (businessProfile.receiptFooter) {
                     encoder.align('center').text(businessProfile.receiptFooter).end();
-                    encoder.align('center').text('-----------------------------').end();
+                    encoder.align('center').text(formatLine('-----------------------------', paperWidth, 'center')).end();
                 }
 
                 encoder.align('center').text('Terima Kasih!').end();
@@ -2124,7 +2283,9 @@
                 const commandsBase64 = btoa(String.fromCharCode.apply(null, commands)); // Ubah ke Base64
 
                 // Kirim data ke aplikasi jembatan lokal
-                const response = await fetch('http://localhost:8000/print', { // PORT 8000 adalah contoh
+                const printerBridgeUrl = businessProfile.printerAddress ? `http://${businessProfile.printerAddress}:8000/print` : 'http://localhost:8000/print';
+                console.log("Sending print command to:", printerBridgeUrl);
+                const response = await fetch(printerBridgeUrl, { // PORT 8000 adalah contoh
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2138,11 +2299,11 @@
                 } else {
                     const errorText = await response.text();
                     console.error('Gagal mencetak struk:', response.status, errorText);
-                    showMessage('error', 'failedToPrintReceipt');
+                    showMessage('error', 'failedToPrintReceipt', [`${errorText || 'Unknown error from printer bridge.'} Pastikan aplikasi jembatan printer berjalan dan terhubung ke ${businessProfile.printerAddress || 'localhost:8000'}.`]);
                 }
             } catch (error) {
                 console.error('Error saat mengirim perintah cetak:', error);
-                showMessage('error', 'failedToPrintReceipt');
+                showMessage('error', 'failedToPrintReceipt', [`${error.message || 'Unknown error.'} Pastikan aplikasi jembatan printer berjalan dan terhubung.`]);
             } finally {
                 hideLoading();
             }
@@ -2246,7 +2407,10 @@
                 totalSalesChange.textContent = '';
                 avgTransactionChange.textContent = '';
                 bestSellingProductChange.textContent = '';
+                analyzeReportButton.disabled = true; // Disable if no transactions
                 return;
+            } else {
+                analyzeReportButton.disabled = false; // Enable if there are transactions
             }
 
             const selectedPeriod = document.querySelector('input[name="reportPeriod"]:checked').value;
@@ -2267,8 +2431,8 @@
                 salesTrendPeriod.textContent = translations[currentLanguage].last30Days;
                 // Filter for the last 6 months for monthly report
                 const sixMonthsAgo = new Date();
-                sixMonthsAgo.setMonth(now.getMonth() - 5); // Include current month
-                sixMonthsAgo.setDate(1); // Start from the beginning of the month
+                sixMonthsAgo.setMonth(now.getMonth() - 5);
+                sixMonthsAgo.setDate(1);
                 filteredTransactions = transactions.filter(t => t.timestamp && t.timestamp.toDate() >= sixMonthsAgo); // FIX: Add null check for timestamp
             }
 
@@ -2320,6 +2484,12 @@
             // Update receipt design input fields
             receiptHeaderInput.value = businessProfile.receiptHeader || '';
             receiptFooterInput.value = businessProfile.receiptFooter || '';
+
+            // Update new printer settings input fields
+            printerAddressInput.value = businessProfile.printerAddress || '';
+            printerTypeSelect.value = businessProfile.printerType || 'thermal';
+            paperWidthInput.value = businessProfile.paperWidth || 42;
+            autoPrintCheckbox.checked = businessProfile.autoPrint || false;
         }
 
         /**
@@ -2341,7 +2511,8 @@
             }
 
             try {
-                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                // Save settings directly under 'users/{userId}/settings'
+                const settingsDocRef = doc(db, "users", currentUserId, "settings", "profile");
                 await setDoc(settingsDocRef, {
                     businessName: newBusinessName,
                     address: newBusinessAddress,
@@ -2373,7 +2544,8 @@
             }
 
             try {
-                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                // Save settings directly under 'users/{userId}/settings'
+                const settingsDocRef = doc(db, "users", currentUserId, "settings", "profile");
                 await setDoc(settingsDocRef, {
                     taxRate: newTaxRate
                 }, { merge: true });
@@ -2388,24 +2560,39 @@
         }
 
         /**
-         * Handles saving receipt design (header/footer) to Firestore.
+         * Handles saving receipt design (header/footer) and printer settings to Firestore.
          */
-        async function handleSaveReceiptDesign() {
+        async function handleSavePrinterSettings() { // Renamed function
             showLoading();
             const newReceiptHeader = receiptHeaderInput.value.trim();
             const newReceiptFooter = receiptFooterInput.value.trim();
+            const newPrinterAddress = printerAddressInput.value.trim();
+            const newPrinterType = printerTypeSelect.value;
+            const newPaperWidth = parseInt(paperWidthInput.value);
+            const newAutoPrint = autoPrintCheckbox.checked;
+
+            if (isNaN(newPaperWidth) || newPaperWidth < 10 || newPaperWidth > 100) {
+                showMessage('error', 'invalidPaperWidth');
+                hideLoading();
+                return;
+            }
 
             try {
-                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                // Save settings directly under 'users/{userId}/settings'
+                const settingsDocRef = doc(db, "users", currentUserId, "settings", "profile");
                 await setDoc(settingsDocRef, {
                     receiptHeader: newReceiptHeader,
-                    receiptFooter: newReceiptFooter
+                    receiptFooter: newReceiptFooter,
+                    printerAddress: newPrinterAddress,
+                    printerType: newPrinterType,
+                    paperWidth: newPaperWidth,
+                    autoPrint: newAutoPrint
                 }, { merge: true });
-                showMessage('transactionSuccess', 'receiptDesignSavedSuccessfully');
+                showMessage('transactionSuccess', 'printerSettingsSavedSuccessfully');
                 printerSettingsModal.classList.add('hidden');
             } catch (error) {
-                console.error("Error saving receipt design:", error);
-                showMessage('error', 'failedToSaveReceiptDesign');
+                console.error("Error saving printer settings:", error);
+                showMessage('error', 'failedToSavePrinterSettings');
             } finally {
                 hideLoading();
             }
@@ -2418,7 +2605,8 @@
             showLoading();
             const selectedLanguage = document.querySelector('input[name="language"]:checked').value;
             try {
-                const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+                // Save settings directly under 'users/{userId}/settings'
+                const settingsDocRef = doc(db, "users", currentUserId, "settings", "profile");
                 await setDoc(settingsDocRef, {
                     language: selectedLanguage
                 }, { merge: true });
@@ -2444,7 +2632,8 @@
             }
             console.log("Setting up settings listener for user:", currentUserId);
 
-            const settingsDocRef = doc(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "settings", "profile");
+            // Listen to settings directly under 'users/{userId}/settings'
+            const settingsDocRef = doc(db, "users", currentUserId, "settings", "profile");
             onSnapshot(settingsDocRef, (docSnapshot) => {
                 if (docSnapshot.exists()) {
                     businessProfile = docSnapshot.data();
@@ -2454,6 +2643,10 @@
                     businessProfile.receiptHeader = businessProfile.receiptHeader || '';
                     businessProfile.receiptFooter = businessProfile.receiptFooter || '';
                     businessProfile.taxRate = businessProfile.taxRate || 0; // Ensure taxRate is initialized
+                    businessProfile.printerAddress = businessProfile.printerAddress || ''; // New
+                    businessProfile.printerType = businessProfile.printerType || 'thermal'; // New
+                    businessProfile.paperWidth = businessProfile.paperWidth || 42; // New
+                    businessProfile.autoPrint = businessProfile.autoPrint === true; // Ensure boolean, default to false
                 } else {
                     console.log("No existing business profile found. Setting default.");
                     businessProfile = {
@@ -2464,8 +2657,13 @@
                         taxRate: 0,
                         language: "id",
                         receiptHeader: "",
-                        receiptFooter: ""
+                        receiptFooter: "",
+                        printerAddress: "", // New default
+                        printerType: "thermal", // New default
+                        paperWidth: 42, // New default for 58mm
+                        autoPrint: false // New default
                     };
+                    // Create default settings if they don't exist
                     setDoc(settingsDocRef, businessProfile).catch(error => console.error("Error setting default profile:", error));
                 }
                 currentLanguage = businessProfile.language; // Update global language variable
@@ -2487,11 +2685,15 @@
         function setupProductListener() {
             if (!currentUserId) {
                 console.log("Product Listener: currentUserId is null. Skipping setup.");
+                products = []; // Clear products if not authenticated
+                renderProducts();
+                renderAvailableProducts(productSearchInput.value);
                 return;
             }
             console.log("Setting up product listener for user:", currentUserId);
 
-            const productsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "products");
+            // Listen to products under 'users/{userId}/products' collection
+            const productsCollectionRef = collection(db, "users", currentUserId, "products");
             onSnapshot(productsCollectionRef, (snapshot) => {
                 products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log("Products data received:", products);
@@ -2509,11 +2711,15 @@
         function setupTransactionListener() {
             if (!currentUserId) {
                 console.log("Transaction Listener: currentUserId is null. Skipping setup.");
+                transactions = []; // Clear transactions if not authenticated
+                renderTransactionHistory([]);
+                renderReports();
                 return;
             }
             console.log("Setting up transaction listener for user:", currentUserId);
 
-            const transactionsCollectionRef = collection(db, "artifacts", typeof __app_id !== 'undefined' ? __app_id : 'default-app-id', "users", currentUserId, "transactions");
+            // Listen to transactions under 'users/{userId}/transactions' collection
+            const transactionsCollectionRef = collection(db, "users", currentUserId, "transactions");
             onSnapshot(transactionsCollectionRef, (snapshot) => {
                 transactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log("Transactions data received:", transactions);
@@ -2538,20 +2744,43 @@
             aiAnalysisResult.textContent = ''; // Clear previous output
             analyzeReportButton.disabled = true;
 
-            const prompt = `
-                Sebagai seorang analis bisnis, berikan ringkasan kinerja penjualan berdasarkan data berikut. Fokus pada tren, kekuatan, dan area yang perlu ditingkatkan.
+            const promptTemplates = {
+                id: `Sebagai seorang analis bisnis, berikan ringkasan kinerja penjualan berdasarkan data berikut. Fokus pada tren, kekuatan, dan area yang perlu ditingkatkan.
 
                 Data Laporan:
-                - Tren Penjualan: ${reportData.salesTrendAmount}
-                - Total Penjualan: ${reportData.totalSalesAmount}
-                - Rata-rata Transaksi: ${reportData.avgTransactionAmount}
-                - Produk Terlaris: ${reportData.bestSellingProduct}
+                - Tren Penjualan: {salesTrendAmount}
+                - Total Penjualan: {totalSalesAmount}
+                - Rata-rata Transaksi: {avgTransactionAmount}
+                - Produk Terlaris: {bestSellingProduct}
 
                 Beberapa transaksi terbaru (untuk konteks, jika tersedia):
-                ${recentTransactions.length > 0 ? recentTransactions.map(t => `- ID: ${t.id.substring(0, 8)}, Total: ${formatCurrency(t.totalAmount)}, Items: ${t.items.map(item => `${item.name} (${item.quantity}x)`).join(', ')}`).join('\n') : 'Tidak ada transaksi terbaru yang tersedia.'}
+                {recentTransactionsList}
 
-                Berikan analisis yang ringkas dan mudah dipahami, tidak lebih dari 200 kata.
-            `;
+                Berikan analisis yang ringkas dan mudah dipahami, tidak lebih dari 200 kata.`,
+                en: `As a business analyst, provide a summary of sales performance based on the following data. Focus on trends, strengths, and areas for improvement.
+
+                Report Data:
+                - Sales Trend: {salesTrendAmount}
+                - Total Sales: {totalSalesAmount}
+                - Average Transaction: {avgTransactionAmount}
+                - Best Selling Product: {bestSellingProduct}
+
+                Some recent transactions (for context, if available):
+                {recentTransactionsList}
+
+                Provide a concise and easy-to-understand analysis, no more than 200 words.`
+            };
+
+            const recentTransactionsList = recentTransactions.length > 0 ?
+                recentTransactions.map(t => `- ID: ${t.id.substring(0, 8)}, Total: ${formatCurrency(t.totalAmount)}, Items: ${t.items.map(item => `${item.name} (${item.quantity}x)`).join(', ')}`).join('\n') :
+                (currentLanguage === 'id' ? 'Tidak ada transaksi terbaru yang tersedia.' : 'No recent transactions available.');
+
+            let prompt = promptTemplates[currentLanguage]
+                .replace('{salesTrendAmount}', reportData.salesTrendAmount)
+                .replace('{totalSalesAmount}', reportData.totalSalesAmount)
+                .replace('{avgTransactionAmount}', reportData.avgTransactionAmount)
+                .replace('{bestSellingProduct}', reportData.bestSellingProduct)
+                .replace('{recentTransactionsList}', recentTransactionsList);
 
             try {
                 let chatHistory = [];
@@ -2607,25 +2836,29 @@
             signUpButton.addEventListener('click', handleSignUp);
             logoutButton.addEventListener('click', handleLogout);
 
-            // Dashboard Navigation
-            goToCashierButton.addEventListener('click', () => {
+            // Dashboard Navigation (updated to use new card elements)
+            goToCashierCard.addEventListener('click', () => {
                 showPage(cashierPage);
                 renderAvailableProducts(productSearchInput.value);
                 renderCart();
             });
-            goToProductManagementButton.addEventListener('click', () => {
+            goToProductManagementCard.addEventListener('click', () => {
                 showPage(productManagementPage);
             });
-            goToTransactionHistoryButton.addEventListener('click', () => {
+            goToTransactionHistoryCard.addEventListener('click', () => {
                 showPage(transactionHistoryPage);
             });
-            goToReportsButton.addEventListener('click', () => {
+            goToReportsCard.addEventListener('click', () => {
                 showPage(reportPage);
                 renderReports();
                 aiAnalysisOutputDiv.classList.add('hidden'); // Hide AI analysis on page load
                 aiAnalysisResult.textContent = ''; // Clear previous results
             });
-            goToSettingsButton.addEventListener('click', () => {
+            goToSettingsButtonTop.addEventListener('click', () => { // Top right settings icon
+                showPage(settingsPage);
+                renderBusinessProfile();
+            });
+            goToSettingsButtonBottom.addEventListener('click', () => { // Bottom settings card
                 showPage(settingsPage);
                 renderBusinessProfile();
             });
@@ -2671,7 +2904,6 @@
             // Cashier Functionality
             productSearchInput.addEventListener('input', (event) => renderAvailableProducts(event.target.value));
             processTransactionButton.addEventListener('click', processTransaction);
-            // Removed taxInput.addEventListener('input', renderCart);
             discountInput.addEventListener('input', renderCart);
             paymentMethodSelect.addEventListener('change', renderCart);
 
@@ -2741,15 +2973,21 @@
             closeTaxModalButton.addEventListener('click', () => taxModal.classList.add('hidden'));
             taxForm.addEventListener('submit', handleSaveTaxRate);
 
-            // Receipt Design Settings
+            // Receipt Design and Printer Settings
             receiptPrinterSetting.addEventListener('click', () => {
                 printerSettingsModal.classList.remove('hidden');
                 // Populate current header/footer for editing
                 receiptHeaderInput.value = businessProfile.receiptHeader || '';
                 receiptFooterInput.value = businessProfile.receiptFooter || '';
+                // Populate new printer settings
+                printerAddressInput.value = businessProfile.printerAddress || '';
+                printerTypeSelect.value = businessProfile.printerType || 'thermal';
+                paperWidthInput.value = businessProfile.paperWidth || 42;
+                autoPrintCheckbox.checked = businessProfile.autoPrint || false;
             });
             closePrinterSettingsModalButton.addEventListener('click', () => printerSettingsModal.classList.add('hidden'));
-            saveReceiptDesignButton.addEventListener('click', handleSaveReceiptDesign);
+            savePrinterSettingsButton.addEventListener('click', handleSavePrinterSettings); // Updated event listener
+
 
             // Language Settings
             languageSetting.addEventListener('click', () => {
@@ -2780,15 +3018,34 @@
                 console.log("Auth state changed. User:", user ? user.uid : "null");
                 if (user) {
                     currentUserId = user.uid;
-                    currentUserIdDisplay.textContent = user.email || user.uid;
+                    // Removed: currentUserIdDisplay.textContent = user.email || user.uid;
                     showPage(dashboardPage);
                     // Setup listeners only when user is authenticated
-                    setupProductListener();
-                    setupTransactionListener();
-                    setupSettingsListener(); // This will also set the initial language
+                    setupProductListener(); // Now listens to user-specific products
+                    setupTransactionListener(); // Now listens to user-specific transactions
+                    setupSettingsListener(); // Still listens to user-specific settings
                 } else {
                     currentUserId = null;
                     showPage(loginPage); // Show login page if no user is authenticated
+
+                    // Attempt anonymous sign-in if not in Canvas environment
+                    // This ensures a userId is always available for data partitioning
+                    if (typeof __initial_auth_token === 'undefined') {
+                        try {
+                            const anonymousUserCredential = await signInAnonymously(auth);
+                            currentUserId = anonymousUserCredential.user.uid;
+                            console.log("Signed in anonymously with UID:", currentUserId);
+                            // If you want to automatically go to dashboard after anonymous login, uncomment:
+                            // showPage(dashboardPage);
+                            // setupProductListener();
+                            // setupTransactionListener();
+                            // setupSettingsListener();
+                        } catch (anonError) {
+                            console.error("Anonymous sign-in failed:", anonError);
+                            showMessage('error', 'failedToSignIn', ['Anonymous sign-in failed.']);
+                        }
+                    }
+
                     // Clear local state when user logs out or is not authenticated
                     // This does NOT delete data from Firebase, only clears the UI
                     products = [];
